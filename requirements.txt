@@ -1,0 +1,8 @@
+django
+djangorestframework
+django-celery-beat
+django-filter
+docker
+redis
+django-jsonfield
+django-html-field

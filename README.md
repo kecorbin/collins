@@ -35,7 +35,7 @@ The client is the plugin manager, it is responsible for executing jobs
 - [x] Execute Jobs on celery workers
 - [x] Results associated with jobs (django ORM)
 - [x] API can send/receive results by job id
-- [ ] last result functionality Dockerjob.results.last().result should populate last_result on Job
+- [x] last result functionality Dockerjob.results.last().result should populate last_result on Job
 - [ ] Save results from jobs ran on celery workers
 - [ ] Job Schedule(periodicTask)
 - [ ] determine standard for plugin names _ or -

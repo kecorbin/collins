@@ -16,6 +16,9 @@ class Environment(models.Model):
     description = models.CharField(max_length=100)
     json = jsonfield.JSONField(max_length=512, null=True, blank=False)
 
+    class Meta:
+        unique_together = ('name', 'description', 'json')
+
 # class FabricTarget(models.Model):
 #     """
 #     a  FabricTarget represents an ACI we will run tests against

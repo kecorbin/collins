@@ -14,6 +14,14 @@ python manage.py runserver
 
 ```
 
+# Beat Service
+
+To start the beat service on the server side the following command is ran:
+
+```
+celery -A api beat -l info -S django
+```
+
 
 # Client
 
@@ -37,10 +45,13 @@ The client is the plugin manager, it is responsible for executing jobs
 - [x] API can send/receive results by job id
 - [x] last result functionality Dockerjob.results.last().result should populate last_result on Job
 - [ ] Save results from jobs ran on celery workers
+- [ ] Job/Results detail view
+- [ ] complete executioner code
+- [ ] build executioner dockerfile
 - [ ] Job Schedule(periodicTask)
 - [ ] determine standard for plugin names _ or -
-- [ ] always_fail plugin
-- [ ] always_pass plugin
-- [ ] apic-api-test plugin
-- [ ] apic-acitoolkit-lint plugin
+- [ ] always_fail plugin pushed to dockerhub
+- [ ] always_pass plugin pushed to dockerhub
+- [ ] apic-api-test plugin pushed to dockerhub
+- [ ] apic-acitoolkit-lint plugin pushed to dockerhub
 - [ ] remote workers

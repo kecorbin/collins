@@ -8,17 +8,28 @@ from html_field import html_cleaner
 
 safe_tags = html_cleaner.HTMLCleaner(allow_tags=['a', 'img', 'em', 'strong'])
 
-class FabricTarget(models.Model):
+class Environment(models.Model):
     """
-    a  FabricTarget represents an ACI we will run tests against
+    Base class for info passed to the plugin
     """
-    plugin_prefix = models.CharField(max_length=25, default="aci")
-    APIC_LOGIN = models.CharField(max_length=25, default='admin')
-    APIC_PASSWORD = models.CharField(max_length=25)
-    APIC_URL = models.URLField(max_length=25)
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=100)
+    json = jsonfield.JSONField(max_length=512, null=True, blank=False)
 
-    def __str__(self):
-        return self.APIC_URL
+# class FabricTarget(models.Model):
+#     """
+#     a  FabricTarget represents an ACI we will run tests against
+#     """
+#     plugin_prefix = models.CharField(max_length=25, default="aci")
+#     APIC_LOGIN = models.CharField(max_length=25, default='admin')
+#     APIC_PASSWORD = models.CharField(max_length=25)
+#     APIC_URL = models.URLField(max_length=25)
+#
+#     class Meta:
+#         unique_together = ('APIC_LOGIN', 'APIC_PASSWORD', 'APIC_URL')
+#
+#     def __str__(self):
+#         return self.fabric_name
 
 
 class Job(models.Model):
@@ -26,7 +37,7 @@ class Job(models.Model):
     type = models.CharField(max_length=25, default="DockerJob")
     active = models.BooleanField(default=True)
     last_result = models.CharField(max_length=10, default="Fail")
-    environment = models.ForeignKey(FabricTarget, blank=True, null=True, default=None)
+    environment = models.ForeignKey(Environment, blank=True, null=True, default=None)
 
 
 class DockerJob(Job):
@@ -43,7 +54,7 @@ class Result(models.Model):
     result = models.CharField(max_length=10)
     json = jsonfield.JSONField(max_length=512, null=True, blank=False)
     pluginHTMLResponse = HTMLField(safe_tags, null=True, blank=False)
-
+    pluginRawResponse = models.TextField(blank=True, null=True)
 
 
 

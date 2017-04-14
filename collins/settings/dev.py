@@ -36,6 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # django_cron and django_celery_beat are experimental attempts at the
+    # scheduling capability, ultimately these may not be required at all
+    "django_cron",
     'django_celery_beat',
     'rest_framework',
     'ui',

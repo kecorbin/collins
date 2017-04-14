@@ -4,11 +4,11 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 # Register your models here.
-from api.models import DockerJob, Result, FabricTarget
+from api.models import DockerJob, Result, Environment
 
-@admin.register(FabricTarget)
-class FabricTargetAdmin(admin.ModelAdmin):
-    list_display = ('id', 'APIC_URL', 'APIC_LOGIN', 'APIC_PASSWORD',)
+@admin.register(Environment)
+class EnvironmentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'description', 'json',)
 
 
 @admin.register(DockerJob)

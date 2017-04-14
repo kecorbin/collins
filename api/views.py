@@ -2,13 +2,13 @@
 from __future__ import unicode_literals
 from rest_framework import viewsets
 from rest_framework import filters
-from models import DockerJob, Result, FabricTarget
-from serializers import ResultsSerializer, DockerJobSerializer, FabricTargetSerializer
+from models import DockerJob, Result, Environment
+from serializers import ResultsSerializer, DockerJobSerializer, EnvironmentSerializer
 # Create your views here.
 
-class FabricTargetViewSet(viewsets.ModelViewSet):
-    serializer_class = FabricTargetSerializer
-    queryset = FabricTarget.objects.all()
+class EnvironmentViewSet(viewsets.ModelViewSet):
+    serializer_class = EnvironmentSerializer
+    queryset = Environment.objects.all()
 
 
 class JobViewSet(viewsets.ModelViewSet):

@@ -1,18 +1,18 @@
 from rest_framework import serializers
-from api.models import DockerJob, Result, FabricTarget
+from api.models import DockerJob, Result, Environment
 import logging
 
 logger = logging.getLogger(__name__)
 
-class FabricTargetSerializer(serializers.HyperlinkedModelSerializer):
+class EnvironmentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = FabricTarget
+        model = Environment
         lookup_field = 'id'
-        fields = ('APIC_LOGIN', 'APIC_URL', 'APIC_PASSWORD')
+        fields = ('id', 'name', 'description', 'json')
 
 class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
-    environment = FabricTargetSerializer(partial=True)
+    environment = EnvironmentSerializer(partial=True)
     latest = serializers.ReadOnlyField(source='results.last.results')
 
     class Meta:
@@ -27,7 +27,7 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, validated_data):
 
         env_data = validated_data.pop('environment')
-        fab = FabricTarget.objects.get_or_create(env_data)
+        fab = Environment.objects.get_or_create(env_data)
         return DockerJob.objects.create(environment=fab[0], **validated_data)
 
 
@@ -35,7 +35,7 @@ class ResultsSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Result
-        fields = ('id','jobId', 'result', 'json', 'pluginHTMLResponse',)
+        fields = ('id','jobId', 'result', 'json', 'pluginHTMLResponse', 'pluginRawResponse')
         lookup_field = 'id'
         # lookup_field = 'response-detail'
 

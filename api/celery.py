@@ -6,6 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'collins.settings.dev')
 
 app = Celery('api.tasks',
              broker=os.getenv('RABBITMQ_URL'),
+             backend=os.getenv("REDIS_URL"),
              include=['api.tasks'])
 
 app.conf.update(

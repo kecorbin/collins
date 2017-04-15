@@ -1,8 +1,18 @@
 from rest_framework import serializers
 from api.models import DockerJob, Result, Environment
+from django_celery_beat.models import IntervalSchedule
 import logging
-
+import json
 logger = logging.getLogger(__name__)
+
+
+class IntervalScheduleSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = IntervalSchedule
+        lookup_field = 'id'
+        fields = ('id', 'every', 'period',)
+
 
 class EnvironmentSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -11,9 +21,11 @@ class EnvironmentSerializer(serializers.HyperlinkedModelSerializer):
         lookup_field = 'id'
         fields = ('id', 'name', 'description', 'json')
 
+
 class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
     environment = EnvironmentSerializer(partial=True)
     latest = serializers.ReadOnlyField(source='results.last.results')
+    interval = IntervalScheduleSerializer(partial=True)
 
     class Meta:
         model = DockerJob
@@ -21,14 +33,27 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         #           'processed', 'created', 'modified',)
         partial = True
         # fields = '__all__'
-        fields = ('id','name','type','image', 'latest', 'active','last_result', 'environment',)
+        fields = ('id','name','type','image',
+                  'latest','last_result', 'environment',
+                  'enabled','task','interval','queue')
         lookup_field = 'id'
 
     def create(self, validated_data):
 
+        # get interval information from request and match up to existing Interval
+        interval_data = validated_data.pop('interval')
+        period = interval_data['period']
+        every = interval_data['every']
+        interval = IntervalSchedule.objects.filter(period=period, every=every)[0]
+
+        # get evnrionment information from request and match to existing or create a new one
         env_data = validated_data.pop('environment')
-        fab = Environment.objects.get_or_create(env_data)
-        return DockerJob.objects.create(environment=fab[0], **validated_data)
+        env = Environment.objects.get_or_create(env_data)
+
+        return DockerJob.objects.create(environment=env[0],
+                                        interval=interval,
+                                        args=json.dumps([validated_data['image']]),
+                                        **validated_data)
 
 
 class ResultsSerializer(serializers.HyperlinkedModelSerializer):

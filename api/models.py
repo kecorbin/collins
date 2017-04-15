@@ -4,7 +4,7 @@ from django.db import models
 import jsonfield
 from html_field.db.models import HTMLField
 from html_field import html_cleaner
-
+from django_celery_beat.models import PeriodicTask
 
 safe_tags = html_cleaner.HTMLCleaner(allow_tags=['a', 'img', 'em', 'strong'])
 
@@ -35,10 +35,9 @@ class Environment(models.Model):
 #         return self.fabric_name
 
 
-class Job(models.Model):
-    name = models.CharField(max_length=25)
+class Job(PeriodicTask):
+    # name = models.CharField(max_length=25)
     type = models.CharField(max_length=25, default="DockerJob")
-    active = models.BooleanField(default=True)
     last_result = models.CharField(max_length=10, default="Fail")
     environment = models.ForeignKey(Environment, blank=True, null=True, default=None)
 

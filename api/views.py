@@ -3,13 +3,19 @@ from __future__ import unicode_literals
 from rest_framework import viewsets
 from rest_framework import filters
 from models import DockerJob, Result, Environment
-from serializers import ResultsSerializer, DockerJobSerializer, EnvironmentSerializer
+from serializers import ResultsSerializer, DockerJobSerializer, EnvironmentSerializer, IntervalScheduleSerializer
+from django_celery_beat.models import IntervalSchedule
+
 # Create your views here.
 
 class EnvironmentViewSet(viewsets.ModelViewSet):
     serializer_class = EnvironmentSerializer
     queryset = Environment.objects.all()
 
+
+class IntervalScheduleViewSet(viewsets.ModelViewSet):
+    serializer_class = IntervalScheduleSerializer
+    queryset = IntervalSchedule.objects.all()
 
 class JobViewSet(viewsets.ModelViewSet):
     """
@@ -20,6 +26,7 @@ class JobViewSet(viewsets.ModelViewSet):
     #filter_backends = (filters.DjangoFilterBackend,)
     #filter_fields = ('processed', 'type',)
     #permissions_classes = (permissions.IsAuthenticated,)
+
 
 
 

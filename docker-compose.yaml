@@ -36,11 +36,23 @@ services:
     depends_on:
       - rabbit
 
-  client:
+  site_1:
     image: collins-worker
     build: ./client/
     environment:
-      - RABBIT_QUEUE=josh
+      - SITE_NAME=SITE_1
+      - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
+    links:
+      - rabbit
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+
+  site_2:
+    image: collins-worker
+    build: ./client/
+    environment:
+      - SITE_NAME=SITE_2
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
     links:
       - rabbit

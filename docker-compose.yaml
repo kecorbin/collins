@@ -1,0 +1,48 @@
+version: '2'
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    hostname: rabbit
+    ports:
+      - 5672:5672
+      - 15672:15672
+  # Celery worker
+  scheduler:
+    image: collins
+    build: .
+    entrypoint: /code/start_scheduler.sh
+    command: celery -A tasks worker --loglevel=info
+    environment:
+      - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
+    links:
+      - rabbit
+    volumes:
+      - ./:/code
+    depends_on:
+      - rabbit
+
+  api:
+    image: collins
+    build: .
+    command: /code/start_api.sh
+    environment:
+      - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
+    links:
+      - rabbit
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/code
+    depends_on:
+      - rabbit
+
+  client:
+    image: collins-worker
+    build: ./client/
+    environment:
+      - RABBIT_QUEUE=josh
+      - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
+    links:
+      - rabbit
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

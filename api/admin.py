@@ -5,7 +5,7 @@ from django.contrib import admin
 
 # Register your models here.
 from api.models import DockerJob, Result, Environment
-
+from django_celery_beat.admin import PeriodicTask, CrontabSchedule
 @admin.register(Environment)
 class EnvironmentAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'description', 'json',)
@@ -13,10 +13,15 @@ class EnvironmentAdmin(admin.ModelAdmin):
 
 @admin.register(DockerJob)
 class DockerJobAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'active', 'environment', 'image',)
+    list_display = ('name', 'type', 'enabled', 'environment', 'image',)
     search_fields = ('id', 'image',)
 
 
 @admin.register(Result)
 class ResponseAdmin(admin.ModelAdmin):
     list_display= ('id', 'jobId', 'result',)
+
+# not needed on admin site as DockerJob inherits from PeriodicTask
+admin.site.unregister(PeriodicTask)
+# crontabs are not currently supported
+admin.site.unregister(CrontabSchedule)

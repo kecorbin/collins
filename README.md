@@ -2,6 +2,15 @@
 
 Collins is your one stop shop for validating Cisco ACI against a published ecosystems of best practices.
 
+# Development
+
+This project is under heavy development.  The easiest way to start contributing is to run a dev environment using
+docker-compose. The current docker file will map local volumes so your code is live at all times.
+
+```
+docker-compose build
+docker-compose up
+```
 # Server
 
 ```

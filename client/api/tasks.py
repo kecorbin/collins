@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 import docker
 from celery import Celery
 import os
-
+from .callbacks import TaskCallback
 
 app = Celery('tasks', broker=os.getenv('RABBITMQ_URL'),
                       backend=os.getenv("REDIS_URL"),
@@ -12,13 +12,11 @@ app = Celery('tasks', broker=os.getenv('RABBITMQ_URL'),
 def ping(self):
     return "Pong"
 
-@app.task(bind=True)
-def add(self, x, y):
-    return x + y
-
 @app.task
-def run_image(image, command=None, **kwargs):
+def run_image(jobId, image, command=None, **kwargs):
     client = docker.from_env()
-    container_output = client.containers.run(image, command=command, **kwargs)
-    return container_output
+    celery_result = client.containers.run(image, command=command, **kwargs)
+    # we need to pass jobid to the callback
+    collins_result = TaskCallback(jobId, celery_result)
+    return celery_result
 

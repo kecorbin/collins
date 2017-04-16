@@ -66,7 +66,12 @@ class ResultsSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         print validated_data
-        job = DockerJob.objects.get(id=validated_data['jobId'])
+        try:
+            job = DockerJob.objects.get(id=validated_data['jobId'])
+        except:
+            # not sure how to best handle this, we simply reject the result and log it for now
+            print("Could not find job for results")
+
         job.last_result = validated_data['result']
         job.save()
         return Result.objects.create(job=job, **validated_data)

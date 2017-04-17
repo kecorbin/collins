@@ -1,0 +1,251 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Collins-API-Tests",
+		"_postman_id": "1562a53f-754e-15f6-e7ff-a00b162c4133",
+		"description": "This Postman collection is used for running integration tests against the collins API"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Retrieve Jobs from API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+							"tests[\"Jobs API returns JSON\"] = JSON.parse(responseBody)"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/api/v1/jobs",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Submit new job via API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Successful POST request\"] = responseCode.code === 201 || responseCode.code === 202;",
+							"postman.setGlobalVariable(\"TEST_JOB_ID\", jsonData.id);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/api/v1/jobs/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n    \"name\": \"{{$randomInt}}\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"latest\": null,\n    \"last_result\": \"Fail\",\n    \"enabled\": true,\n    \"interval\": {\n      \"id\": 1,\n      \"every\": 15,\n      \"period\": \"seconds\"\n    },\n    \"queue\": \"SITE_1\"\n  }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Results From API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+							"",
+							"// set the length for now, should be more results coming shortly",
+							"responseJson = JSON.parse(responseBody);",
+							"var num_of_results = responseJson.length;",
+							"",
+							"// at this point in the test run, we should have no results",
+							"tests[\"no results for brand new job\"] = num_of_results === 0;",
+							"postman.setGlobalVariable(\"NUM_OF_RESPONSES\", num_of_results);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/api/v1/results?jobId={{TEST_JOB_ID}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n    \"name\": \"test_job_pass\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"active\": true,\n    \"last_result\": \"Pass\",\n    \"environment\": {\n      \"APIC_LOGIN\": \"admin\",\n      \"APIC_URL\": \"http://10.94.140.72\",\n      \"APIC_PASSWORD\": \"ins3965!\"\n    }\n  }"
+				},
+				"description": "During integration tests, we create a job that executes every 15 seconds. Therefore, we should get results pretty immediately. "
+			},
+			"response": []
+		},
+		{
+			"name": "Submit new results to via API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Successful POST request\"] = responseCode.code === 201 || responseCode.code === 202;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/api/v1/results/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n    \"jobId\": {{TEST_JOB_ID}},\n    \"result\": \"Passed\",\n    \"json\": null,\n    \"pluginHTMLResponse\": \"<h1>Integration Test Results</h1>\",\n    \"pluginRawResponse\": null\n  }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Results From API copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+							"",
+							"",
+							"// set the length for now, should be more results coming shortly",
+							"responseJson = JSON.parse(responseBody);",
+							"var num_of_results = responseBody.length;",
+							"",
+							"// at this point in the test run, we should have at least 1 result",
+							"tests[\"no results for brand new job\"] = num_of_results > 0;",
+							"postman.setGlobalVariable(\"NUM_OF_RESPONSES\", num_of_results);",
+							"",
+							"// this is a hack, but we will pause for a period ",
+							"// to wait for worker results to come back",
+							"// https://github.com/postmanlabs/postman-app-support/issues/1038",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/api/v1/results?jobId={{TEST_JOB_ID}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n    \"name\": \"test_job_pass\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"active\": true,\n    \"last_result\": \"Pass\",\n    \"environment\": {\n      \"APIC_LOGIN\": \"admin\",\n      \"APIC_URL\": \"http://10.94.140.72\",\n      \"APIC_PASSWORD\": \"ins3965!\"\n    }\n  }"
+				},
+				"description": "During integration tests, we create a job that executes every 15 seconds. Therefore, we should get results pretty immediately. "
+			},
+			"response": []
+		},
+		{
+			"name": "10 Second Delay",
+			"request": {
+				"url": "https://postman-echo.com/delay/10",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Waiting for workers to process jobs. https://docs.postman-echo.com/#f-509e-efe0-686d-eed4b3d2f1f0\n"
+			},
+			"response": []
+		},
+		{
+			"name": "10 Second Delay (again)",
+			"request": {
+				"url": "https://postman-echo.com/delay/10",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Waiting for workers to process jobs. https://docs.postman-echo.com/#f-509e-efe0-686d-eed4b3d2f1f0\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Workers processing results",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+							"",
+							"// set the length for now, should be more results coming shortly",
+							"responseJson = JSON.parse(responseBody);",
+							"var num_of_results = responseJson.length;",
+							"",
+							"// at this point in the test run, we should one result",
+							"tests[\"Check for static results\"] = num_of_results == 1;",
+							"postman.setGlobalVariable(\"NUM_OF_RESPONSES\", num_of_results);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{base_url}}/api/v1/results?jobId={{TEST_JOB_ID}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n    \"name\": \"test_job_pass\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"active\": true,\n    \"last_result\": \"Pass\",\n    \"environment\": {\n      \"APIC_LOGIN\": \"admin\",\n      \"APIC_URL\": \"http://10.94.140.72\",\n      \"APIC_PASSWORD\": \"ins3965!\"\n    }\n  }"
+				},
+				"description": "During integration tests, we create a job that executes every 15 seconds. Therefore, we should get results pretty immediately. "
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "194516df-1e27-f71d-664f-a841b8baabc8",
+  "name": "Collins-Local",
+  "values": [
+    {
+      "enabled": true,
+      "key": "base_url",
+      "value": "http://172.17.0.1:8000",
+      "type": "text"
+    }
+  ],
+  "timestamp": 1491836875089,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2017-04-17T20:55:07.319Z",
+  "_postman_exported_using": "Postman/4.10.3"
+}

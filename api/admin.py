@@ -16,6 +16,10 @@ class DockerJobAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'enabled', 'environment', 'image',)
     search_fields = ('id', 'image',)
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(DockerJobAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['task'].initial = 'api.tasks.run_image'
+        return form
 
 @admin.register(Result)
 class ResponseAdmin(admin.ModelAdmin):

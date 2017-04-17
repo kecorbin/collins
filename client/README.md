@@ -1,5 +1,26 @@
+# Collins Client
 
-# Interactive way to review results
+This is the collins worker client, the client is usually ran as a docker container
+
+# Docker Daemon
+
+Currently we bind map to docker socket
+
+```
+-v /var/run/docker.sock:/var/run/docker.sock
+
+```
+
+# Environment
+
+The following environment variables are supported
+
+- RESULTS_API_URL (required)
+- RESULTS_API_USER
+- RESULTS_API_PASSWORD
+
+
+### Interactively review results
 ```
 (venv) KECORBIN-M-90Y9:client kecorbin$ docker run -ti --net=c8b9500cb16d collins-worker /bin/bash
 root@456794991d9e:/code# export REDIS_URL=redis://redis
@@ -67,4 +88,23 @@ u' _____ \n< moo >\n ----- \n    \\\n     \\\n      \\     \n                   
           \____\______/
 
 >>>
+```
+
+#### Interactively schedule jobs
+
+```
+import docker
+from celery import Celery
+import os
+
+
+app = Celery('tasks', broker=os.getenv('RABBITMQ_URL'),
+                      backend=os.getenv("REDIS_URL"),
+                      includes=['api.tasks']
+             )
+
+import api.tasks
+
+results = api.tasks.run_image.apply_async(args=['docker/whalesay'], kwargs={"command":"cowsay moo"}, queue="SITE_1")
+
 ```

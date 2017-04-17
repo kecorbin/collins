@@ -35,11 +35,11 @@ var JobList = React.createClass({
     render: function() {
         var JobTiles = this.props.data.map(function(job) {
             return (
-                <JobTile name={job.name}
-            key={job.id}
-            active={job.active}
-            last_result ={job.last_result}>
-            {job.name}
+            <JobTile name={job.name}
+                key={job.id}
+                enabled={job.enabled}
+                last_result ={job.last_result}>
+                {job.name}
 
             </JobTile>
             );
@@ -54,10 +54,10 @@ var JobList = React.createClass({
 
 
 var JobTile = React.createClass({
-    // returns class name based on whether the job is active or not
+    // returns class name based on whether the job is enabled or not
     setActiveClass: function(){
-        console.log(this)
-        if (this.props.active) {
+
+        if (this.props.enabled) {
             return "btn btn-success"
         } else  {
             return "btn btn-basic"
@@ -71,10 +71,10 @@ var JobTile = React.createClass({
         }
     },
     label: function(){
-        if (this.props.active) {
-            return "Active"
+        if (this.props.enabled) {
+            return "Enabled"
         } else {
-            return "Inactive"
+            return "Disabled"
         }
     },
 

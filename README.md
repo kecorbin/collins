@@ -53,7 +53,7 @@ The client is the plugin manager, it is responsible for executing jobs
 - [x] Results associated with jobs (django ORM)
 - [x] API can send/receive results by job id
 - [x] last result functionality Dockerjob.results.last().result should populate last_result on Job
-- [ ] Save results from jobs ran on celery workers
+- [x] Save results from jobs ran on celery workers
 - [ ] Job/Results detail view
 - [ ] complete executioner code
 - [ ] build executioner dockerfile

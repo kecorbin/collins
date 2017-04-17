@@ -87,6 +87,7 @@ services:
       - REDIS_URL=redis://redis
       - SITE_NAME=SITE_2
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
+      - RESULTS_API=http://api:8000/api/v1/results/
     links:
       - rabbit
       - redis

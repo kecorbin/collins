@@ -24,7 +24,7 @@ class EnvironmentSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
-    environment = EnvironmentSerializer(partial=True)
+    environment = EnvironmentSerializer(partial=True, required=False)
     latest = serializers.ReadOnlyField(source='results.last.results')
     interval = IntervalScheduleSerializer(partial=True)
 
@@ -48,14 +48,18 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         interval = IntervalSchedule.objects.filter(period=period, every=every)[0]
 
         # get evnrionment information from request and match to existing or create a new one
-        env_data = validated_data.pop('environment')
-        env = Environment.objects.get_or_create(env_data)
-
-        # create the initial object
-        job = DockerJob.objects.create(environment=env[0],
+        if 'environment' in validated_data:
+            env_data = validated_data.pop('environment')
+            env = Environment.objects.get_or_create(env_data)
+            job = DockerJob.objects.create(environment=env[0],
                                        interval=interval,
                                        task='api.tasks.run_image',
                                        **validated_data)
+        else:
+            job = DockerJob.objects.create(interval=interval,
+                                           task='api.tasks.run_image',
+                                           **validated_data)
+
         # save is so that we can get primary key
         job.refresh_from_db()
         job.args=json.dumps([job.id, job.image])

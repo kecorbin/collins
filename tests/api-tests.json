@@ -3,7 +3,7 @@
 	"info": {
 		"name": "Collins-API-Tests",
 		"_postman_id": "1562a53f-754e-15f6-e7ff-a00b162c4133",
-		"description": "This Postman collection is used for running integration tests against the collins API"
+		"description": "This Postman collection is used for running integration tests against the collins API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [

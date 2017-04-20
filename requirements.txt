@@ -6,3 +6,4 @@ docker
 redis
 django-jsonfield
 django-html-field
+django-cors-headers

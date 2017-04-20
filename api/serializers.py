@@ -65,8 +65,6 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         job.args=json.dumps([job.id, job.image])
         job.save()
 
-        return job
-
 
 class ResultsSerializer(serializers.HyperlinkedModelSerializer):
 

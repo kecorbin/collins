@@ -1,59 +1,80 @@
-// An ACI fabric
-var Jobs = React.createClass({displayName: 'Jobs',
-    getInitialState: function() {
-        return {data: []};
-    },
+// A view of the jobs screen
+var JobsDashboard = React.createClass({
+  getInitialState: function() {
+      return {data: []};
+  },
 
-    loadJobsFromAPI: function() {
-        $.ajax({
-            url: this.props.url,
-            dataType: 'json',
-            cache: false,
-            success: function(data) {
-                this.setState({data: data});
-            }.bind(this),
-            error: function(xhr, status, err) {
-                console.error(this.props.url, status, err.toString());
-            }.bind(this)
-        });
-    },
-    componentDidMount: function() {
-        this.loadJobsFromAPI();
-        setInterval(this.loadJobsFromAPI, this.props.pollInterval);
-    },
-    render: function() {
-        return (
-            <div className="jobs">
-            <JobList data={this.state.data} />
-        </div>
-        )
-    }
-});
+  loadJobsFromAPI: function() {
+      $.ajax({
+          url: this.props.url,
+          dataType: 'json',
+          cache: false,
+          success: function(data) {
+              this.setState({data: data});
+          }.bind(this),
+          error: function(xhr, status, err) {
+              console.error(this.props.url, status, err.toString());
+          }.bind(this)
+      });
+  },
+  // periodically update from API
+  componentDidMount: function() {
+      this.loadJobsFromAPI();
+      setInterval(this.loadJobsFromAPI, this.props.pollInterval);
+  },
 
-// A job list
+
+ 	render: function() {
+ 		return (
+      <div className="ui-layout-center">
+          <JobList data={this.state.data} />
+      </div>
+
+ 		);
+ 	}
+ });
+
+// The list of rendered jobs
 var JobList = React.createClass({
     render: function() {
-        var JobTiles = this.props.data.map(function(job) {
+        var ListEntries = this.props.data.map(function(job) {
             return (
-            <JobTile name={job.name}
-                key={job.id}
-                enabled={job.enabled}
-                last_result ={job.last_result}>
-                {job.name}
-
-            </JobTile>
+                    <ListEntry name={job.name}
+                               key={job.id}
+                               every={job.interval.every}
+                               period={job.interval.period}
+                               enabled={job.enabled}
+                               last_result ={job.last_result}>
+                              //  {job.name}
+                    </ListEntry>
             );
         });
         return (
             <div className="jobList">
-            {JobTiles}
+            <table className="table table-hover table-striped">
+                <thead>
+                  <tr>
+                    <th>Active</th>
+                    <th>Job Name</th>
+                    <th>Last Result</th>
+                    <th>Frequency</th>
+                  </tr>
+                </thead>
+
+             <tbody>
+
+                {ListEntries}
+
+            </tbody>
+            </table>
             </div>
         );
     }
 });
 
+// a single list entry
+var ListEntry = React.createClass({
 
-var JobTile = React.createClass({
     // returns class name based on whether the job is enabled or not
     setActiveClass: function(){
 
@@ -63,6 +84,7 @@ var JobTile = React.createClass({
             return "btn btn-basic"
         }
     },
+    // determines button color based on last result
     setLastResultClass: function(){
         if (this.props.last_result == "Passed") {
             return "btn btn-success"
@@ -70,6 +92,7 @@ var JobTile = React.createClass({
             return "btn btn-danger"
         }
     },
+    // change boolean to user friendly value
     label: function(){
         if (this.props.enabled) {
             return "Enabled"
@@ -77,35 +100,25 @@ var JobTile = React.createClass({
             return "Disabled"
         }
     },
-
+    // HTML representation
     render: function() {
         return (
-            // This is where we render the html representation of the object's icon
-            // <div className="foo"> here will render as <div class="foo">
-            // start as a simple list, comment this line out and add your code below
-
-            // End html representation
-            <div className="col-sm-4">
-            <div className="tile gray">
-            <h3 className="title">
-            {this.props.name}
-        </h3>
-        <div className="faults">
-            <div className="col-sm-4">
-            <button className={this.setActiveClass()}>{this.label()}</button>
-
-        </div>
-        <div className="col-sm-4">
-            <button className={this.setLastResultClass()}>{this.props.last_result}</button>
-
-        </div>
-
-
-        </div>
-        </div>
-        </div>
-        // End html representation
+                <tr>
+                  <td><button className={this.setActiveClass()}>{this.label()}</button></td>
+                  <td>{this.props.name}</td>
+                  <td><button className={this.setLastResultClass()}>{this.props.last_result}</button></td>
+                  <td>{this.props.every} {this.props.period}</td>
+                </tr>
         );
     }
 
 });
+
+var JobDetail = React.createClass({
+  render: function() {
+    return (
+    <h1>Job Detail</h1>
+    )
+  }
+}
+)

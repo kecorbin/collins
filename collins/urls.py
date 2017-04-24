@@ -18,10 +18,13 @@ from django.conf.urls import include
 from django.contrib import admin
 from rest_framework.authtoken import views as restviews
 from api.urls import router as api
+from api.urls import job_results_router
+
 import ui.urls
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/auth/', restviews.obtain_auth_token),
     url(r'^api/v1/', include(api.urls)),
+    url(r'^api/v1/', include(job_results_router.urls)),
     url(r'^ui/', include(ui.urls)),
 ]

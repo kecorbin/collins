@@ -126,6 +126,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',),
 
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'PAGE_SIZE': 10
 }
 
 # Internationalization

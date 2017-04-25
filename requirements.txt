@@ -4,6 +4,7 @@ django-celery-beat
 django-filter
 docker
 redis
+drf-nested-routers
 django-jsonfield
 django-html-field
 django-cors-headers

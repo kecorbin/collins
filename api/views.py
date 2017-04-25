@@ -2,12 +2,16 @@
 from __future__ import unicode_literals
 from rest_framework.response import Response
 from rest_framework import viewsets, mixins
-from rest_framework import filters
 from models import DockerJob, Result, Environment
-from serializers import ResultsSerializer, DockerJobSerializer, EnvironmentSerializer, IntervalScheduleSerializer
+from serializers import (ResultsSerializer,
+                         DockerJobSerializer,
+                         EnvironmentSerializer,
+                         IntervalScheduleSerializer
+                         )
 from django_celery_beat.models import IntervalSchedule
 
 # Create your views here.
+
 
 class EnvironmentViewSet(viewsets.ModelViewSet):
     serializer_class = EnvironmentSerializer
@@ -17,6 +21,7 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
 class IntervalScheduleViewSet(viewsets.ModelViewSet):
     serializer_class = IntervalScheduleSerializer
     queryset = IntervalSchedule.objects.all()
+
 
 class JobViewSet(viewsets.ModelViewSet):
     """
@@ -50,7 +55,6 @@ class JobResultViewSet(viewsets.GenericViewSet,
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-
     def retrieve(self, request, job_pk=None):
         print "retrieve"
         job = DockerJob.objects.filter(pk=int(job_pk))[0]
@@ -63,7 +67,6 @@ class JobResultViewSet(viewsets.GenericViewSet,
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
 
 
 class ResultViewSet(viewsets.ModelViewSet):

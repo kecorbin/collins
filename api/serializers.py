@@ -34,27 +34,30 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         #           'processed', 'created', 'modified',)
         partial = True
         # fields = '__all__'
-        fields = ('id','name','type','image',
-                  'latest','last_result', 'environment',
-                  'enabled','interval','queue')
+        fields = ('id', 'name', 'type', 'image',
+                  'latest', 'last_result', 'environment',
+                  'enabled', 'interval', 'queue')
         lookup_field = 'id'
 
     def create(self, validated_data):
 
-        # get interval information from request and match up to existing Interval
+        # get interval information from request
+        # and match up to existing Interval
         interval_data = validated_data.pop('interval')
         period = interval_data['period']
         every = interval_data['every']
-        interval = IntervalSchedule.objects.filter(period=period, every=every)[0]
+        interval = IntervalSchedule.objects.filter(period=period,
+                                                   every=every)[0]
 
-        # get evnrionment information from request and match to existing or create a new one
+        # get evnrionment information from request
+        # and match to existing or create a new one
         if 'environment' in validated_data:
             env_data = validated_data.pop('environment')
             env = Environment.objects.get_or_create(env_data)
             job = DockerJob.objects.create(environment=env[0],
-                                       interval=interval,
-                                       task='api.tasks.run_image',
-                                       **validated_data)
+                                           interval=interval,
+                                           task='api.tasks.run_image',
+                                           **validated_data)
         else:
             job = DockerJob.objects.create(interval=interval,
                                            task='api.tasks.run_image',
@@ -62,7 +65,7 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
 
         # save is so that we can get primary key
         job.refresh_from_db()
-        job.args=json.dumps([job.id, job.image])
+        job.args = json.dumps([job.id, job.image])
         job.save()
 
 
@@ -70,7 +73,8 @@ class ResultsSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Result
-        fields = ('id','jobId', 'result', 'json', 'pluginHTMLResponse', 'pluginRawResponse')
+        fields = ('id', 'jobId', 'result', 'json',
+                  'pluginHTMLResponse', 'pluginRawResponse')
         lookup_field = 'id'
         # lookup_field = 'response-detail'
 
@@ -79,7 +83,8 @@ class ResultsSerializer(serializers.HyperlinkedModelSerializer):
         try:
             job = DockerJob.objects.get(id=validated_data['jobId'])
         except:
-            # not sure how to best handle this, we simply reject the result and log it for now
+            # there may be a better way to handle this,
+            # we simply reject the result and log it for now
             print("Could not find job for results")
 
         job.last_result = validated_data['result']

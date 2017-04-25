@@ -4,10 +4,12 @@ import os
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'collins.settings.dev')
 
+# noinspection PyTypeChecker
 app = Celery('api.tasks',
              broker=os.getenv('RABBITMQ_URL'),
              backend=os.getenv("REDIS_URL"),
              include=['api.tasks'])
+
 
 app.conf.update(
     result_expires=3600,
@@ -15,4 +17,3 @@ app.conf.update(
 
 if __name__ == '__main__':
     app.start()
-

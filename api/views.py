@@ -41,7 +41,8 @@ class JobResultViewSet(viewsets.GenericViewSet,
 
     """
     serializer_class = ResultsSerializer
-
+    queryset = Result.objects.all()
+    
     def list(self, request, job_pk=None):
         print "list"
         job = DockerJob.objects.filter(pk=int(job_pk))[0]
@@ -74,4 +75,4 @@ class ResultViewSet(viewsets.ModelViewSet):
     This is the API endpoint for working with results.
     """
     serializer_class = ResultsSerializer
-    queryset = reversed(Result.objects.all())
+    queryset = Result.objects.all()

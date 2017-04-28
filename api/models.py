@@ -30,7 +30,7 @@ class Job(PeriodicTask):
 
 
 class DockerJob(Job):
-    image = models.CharField(max_length=25)
+    image = models.CharField(max_length=128)
 
     class JSONAPIMeta:
         resource_name = "job"
@@ -45,7 +45,7 @@ class Result(models.Model):
                             on_delete=models.CASCADE,
                             null=True
                             )
-
+    created = models.DateTimeField(auto_now_add=True)
     jobId = models.IntegerField(null=False,
                                 blank=False
                                 )

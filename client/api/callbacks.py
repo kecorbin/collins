@@ -13,6 +13,7 @@ RESULTS_API_PASSWORD = os.getenv("RESULTS_API_PASSWORD", None)
 class TaskCallback(object):
     """
     TaskCallback is responsible for recieving the stdout from the container executed by the celery worker
+
     """
 
     def __init__(self, jobid, container_msg):
@@ -36,8 +37,10 @@ class TaskCallback(object):
         :return: requests.Response
         """
         result = self._generate_results()
-        print("Uploading Response to Results API")
-        resp = requests.post(RESULTS_API, data=result)
+        print("Uploading Response to Results API: {}".format(result))
+        headers = {"Content-Type": "application/json"}
+        resp = requests.post(RESULTS_API, headers=headers, data=json.dumps(result))
+        print(resp.text)
         print("Response from API: {}".format(resp.status_code))
 
 
@@ -79,6 +82,7 @@ class Result(object):
 
             # add job id to k,v
             self._container_dict["jobId"] = self.jobId
+            #
             self._result_dict = self._container_dict
 
         # did not get valid json from container

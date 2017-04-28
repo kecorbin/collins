@@ -11,4 +11,4 @@ app = Celery('tasks', broker=os.getenv('RABBITMQ_URL'),
 
 import api.tasks
 
-results = api.tasks.run_image.apply_async(args=['docker/whalesay'], kwargs={"command":"cowsay moo"}, queue="SITE_1")
+## results = api.tasks.run_image.apply_async(args=['docker/whalesay'], kwargs={"command":"cowsay moo"}, queue="SITE_1")

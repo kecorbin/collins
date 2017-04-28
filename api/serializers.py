@@ -22,6 +22,27 @@ class EnvironmentSerializer(serializers.HyperlinkedModelSerializer):
         lookup_field = 'id'
         fields = ('id', 'name', 'description', 'json')
 
+class ResultsSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Result
+        fields = ('id', 'result', 'json',
+                  'pluginHTMLResponse', 'pluginRawResponse')
+        lookup_field = 'id'
+        # lookup_field = 'response-detail'
+
+    # def create(self, validated_data):
+    #     print validated_data
+    #     try:
+    #         job = DockerJob.objects.get(id=validated_data['jobId'])
+    #     except:
+    #         # there may be a better way to handle this,
+    #         # we simply reject the result and log it for now
+    #         print("Could not find job for results")
+    #
+    #     job.last_result = validated_data['result']
+    #     job.save()
+    #     return Result.objects.create(job=job, **validated_data)
 
 class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
     environment = EnvironmentSerializer(partial=True, required=False)
@@ -67,26 +88,4 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         job.refresh_from_db()
         job.args = json.dumps([job.id, job.image])
         job.save()
-
-
-class ResultsSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Result
-        fields = ('id', 'jobId', 'result', 'json',
-                  'pluginHTMLResponse', 'pluginRawResponse')
-        lookup_field = 'id'
-        # lookup_field = 'response-detail'
-
-    def create(self, validated_data):
-        print validated_data
-        try:
-            job = DockerJob.objects.get(id=validated_data['jobId'])
-        except:
-            # there may be a better way to handle this,
-            # we simply reject the result and log it for now
-            print("Could not find job for results")
-
-        job.last_result = validated_data['result']
-        job.save()
-        return Result.objects.create(job=job, **validated_data)
+        return job

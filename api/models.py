@@ -28,9 +28,12 @@ class Job(PeriodicTask):
                                     blank=True, null=True, default=None)
 
 
+
 class DockerJob(Job):
     image = models.CharField(max_length=25)
 
+    class JSONAPIMeta:
+        resource_name = "job"
 
 class Schedule(models.Model):
     pass

@@ -22,7 +22,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8cv#zvcb9_rlk1rsyk^&83om*3gjs&j6uq*g6m=9vvee($7e_g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.getenv["ENVIRONMENT"] == "PRODUCTION":
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -37,8 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # django_celery_beat are experimental attempts at the
-    # scheduling capability, ultimately these may not be required at all
+    'rest_framework_json_api',
     'django_celery_beat',
     'rest_framework',
     'ui',
@@ -125,8 +127,7 @@ REST_FRAMEWORK = {
         # We need BasicAuth for registration
         'rest_framework.authentication.BasicAuthentication',),
 
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
-    'PAGE_SIZE': 10
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
 
 # Internationalization
@@ -147,4 +148,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-

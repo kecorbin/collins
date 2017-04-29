@@ -64,3 +64,9 @@ class Result(models.Model):
     pluginRawResponse = models.TextField(blank=True,
                                          null=True
                                          )
+
+    class Meta:
+        ordering = ['-created',]
+
+    def __repr__(self):
+        return str(self.id)

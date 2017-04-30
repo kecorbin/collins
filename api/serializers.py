@@ -48,6 +48,8 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
     environment = EnvironmentSerializer(partial=True, required=False)
     latest = serializers.ReadOnlyField(source='results.last.results')
     interval = IntervalScheduleSerializer(partial=True)
+    passed_count = serializers.SerializerMethodField()
+    failed_count = serializers.SerializerMethodField()
 
     class Meta:
         model = DockerJob
@@ -57,8 +59,16 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         # fields = '__all__'
         fields = ('id', 'name', 'type', 'image',
                   'latest', 'last_result', 'environment',
-                  'enabled', 'interval', 'queue')
+                  'enabled', 'interval', 'queue', 'passed_count',
+                  'failed_count')
+
         lookup_field = 'id'
+
+    def get_passed_count(self, obj):
+        return obj.results.filter(result="Passed").count()
+
+    def get_failed_count(self, obj):
+        return obj.results.filter(result="Failed").count()
 
     def create(self, validated_data):
 

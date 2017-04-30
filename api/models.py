@@ -24,21 +24,49 @@ class Environment(models.Model):
 class Job(PeriodicTask):
     type = models.CharField(max_length=25, default="DockerJob")
     last_result = models.CharField(max_length=10, default="Fail")
-    environment = models.ForeignKey(Environment, blank=True, null=True, default=None)
+    environment = models.ForeignKey(Environment,
+                                    blank=True, null=True, default=None)
+
 
 
 class DockerJob(Job):
-    image = models.CharField(max_length=25)
+    image = models.CharField(max_length=128)
 
+    class JSONAPIMeta:
+        resource_name = "job"
 
 class Schedule(models.Model):
     pass
 
 
 class Result(models.Model):
-    job = models.ForeignKey(DockerJob, related_name='results', on_delete=models.CASCADE, null=True)
-    jobId = models.IntegerField(null=False, blank=False)
+    job = models.ForeignKey(DockerJob,
+                            related_name='results',
+                            on_delete=models.CASCADE,
+                            null=True
+                            )
+    created = models.DateTimeField(auto_now_add=True)
+    jobId = models.IntegerField(null=False,
+                                blank=False
+                                )
     result = models.CharField(max_length=10)
-    json = jsonfield.JSONField(max_length=512, null=True, blank=False)
-    pluginHTMLResponse = HTMLField(safe_tags, null=True, blank=False)
-    pluginRawResponse = models.TextField(blank=True, null=True)
+
+    json = jsonfield.JSONField(max_length=512,
+                               null=True,
+                               blank=False
+                               )
+
+    pluginHTMLResponse = HTMLField(safe_tags,
+                                   null=True,
+                                   blank=False
+                                   )
+
+    pluginRawResponse = models.TextField(blank=True,
+                                         null=True
+                                         )
+
+    class Meta:
+        ordering = ['-created',]
+
+    def __repr__(self):
+        return str(self.id)

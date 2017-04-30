@@ -14,9 +14,9 @@ def ping(self):
 
 @app.task
 def run_image(jobId, image, command=None, **kwargs):
+    print("Executing Task for job id {}".format(jobId))
     client = docker.from_env()
     celery_result = client.containers.run(image, command=command, **kwargs)
     # we need to pass jobid to the callback
     collins_result = TaskCallback(jobId, celery_result)
     return celery_result
-

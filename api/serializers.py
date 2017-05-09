@@ -22,6 +22,7 @@ class EnvironmentSerializer(serializers.HyperlinkedModelSerializer):
         lookup_field = 'id'
         fields = ('id', 'name', 'description', 'json')
 
+
 class ResultsSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -43,6 +44,7 @@ class ResultsSerializer(serializers.HyperlinkedModelSerializer):
         job.last_result = validated_data['result']
         job.save()
         return Result.objects.create(job=job, **validated_data)
+
 
 class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
     environment = EnvironmentSerializer(partial=True, required=False)
@@ -71,14 +73,13 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         return obj.results.filter(result="Failed").count()
 
     def create(self, validated_data):
-
         # get interval information from request
         # and match up to existing Interval
         interval_data = validated_data.pop('interval')
         period = interval_data['period']
         every = interval_data['every']
-        interval = IntervalSchedule.objects.filter(period=period,
-                                                   every=every)[0]
+        interval = IntervalSchedule.objects.get_or_create(period=period,
+                                                          every=every)[0]
 
         # get evnrionment information from request
         # and match to existing or create a new one

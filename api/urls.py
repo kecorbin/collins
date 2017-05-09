@@ -8,7 +8,7 @@ from api.views import (JobViewSet,
 from rest_framework import routers
 from rest_framework_nested.routers import NestedSimpleRouter
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 
 router.register(r'jobs',
                 JobViewSet,

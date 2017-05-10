@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 # Register your models here.
-from api.models import DockerJob, Result, Environment
+from api.models import DockerJob, Result, Environment, Scheduler
 from django_celery_beat.admin import PeriodicTask, CrontabSchedule
 
 
@@ -27,6 +27,22 @@ class DockerJobAdmin(admin.ModelAdmin):
 @admin.register(Result)
 class ResponseAdmin(admin.ModelAdmin):
     list_display = ('id', 'jobId', 'result',)
+
+
+@admin.register(Scheduler)
+class SchedulerAdmin(admin.ModelAdmin):
+    #list_display = ('id', 'name', 'restart')
+
+    def is_something(self, instance):
+        if instance.restart == False:
+            return False
+        return True
+
+    is_something.boolean = True
+    is_something.short_description = u"Restart Needed?"
+
+    list_display = ['id', 'name', 'is_something']
+
 
 # not needed on admin site as DockerJob inherits from PeriodicTask
 admin.site.unregister(PeriodicTask)

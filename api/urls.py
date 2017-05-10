@@ -2,7 +2,8 @@ from api.views import (JobViewSet,
                        JobResultViewSet,
                        ResultViewSet,
                        EnvironmentViewSet,
-                       IntervalScheduleViewSet)
+                       IntervalScheduleViewSet,
+                       SchedulerViewSet)
 
 
 from rest_framework import routers
@@ -33,3 +34,7 @@ job_results_router = NestedSimpleRouter(router,
 job_results_router.register(r'results',
                             JobResultViewSet,
                             base_name='job-results')
+
+router.register(r'schedulers',
+                SchedulerViewSet,
+                base_name='scheduler-detail')

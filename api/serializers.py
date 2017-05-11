@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import DockerJob, Result, Environment
+from api.models import DockerJob, Result, Environment, Scheduler
 from django_celery_beat.models import IntervalSchedule
 import logging
 import json
@@ -100,3 +100,11 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         job.args = json.dumps([job.id, job.image])
         job.save()
         return job
+
+
+class SchedulerSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Scheduler
+        lookup_field = 'id'
+        fields = ('id', 'name', 'restart')

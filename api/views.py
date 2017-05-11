@@ -2,11 +2,12 @@
 from __future__ import unicode_literals
 from rest_framework.response import Response
 from rest_framework import viewsets, mixins
-from models import DockerJob, Result, Environment
+from models import DockerJob, Result, Environment, Scheduler
 from serializers import (ResultsSerializer,
                          DockerJobSerializer,
                          EnvironmentSerializer,
-                         IntervalScheduleSerializer
+                         IntervalScheduleSerializer,
+                         SchedulerSerializer
                          )
 from django_celery_beat.models import IntervalSchedule
 
@@ -73,3 +74,11 @@ class ResultViewSet(viewsets.ModelViewSet):
     """
     serializer_class = ResultsSerializer
     queryset = Result.objects.all()
+
+
+class SchedulerViewSet(viewsets.ModelViewSet):
+    """
+    This is the API endpoint for working with Schedulers.
+    """
+    serializer_class = SchedulerSerializer
+    queryset = Scheduler.objects.all()

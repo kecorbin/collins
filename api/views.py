@@ -46,24 +46,14 @@ class JobResultViewSet(viewsets.GenericViewSet,
 
     def list(self, request, job_pk=None):
         job = DockerJob.objects.filter(pk=int(job_pk))[0]
-        queryset = job.results.all().reverse()
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
+        queryset = job.results.all()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, job_pk=None):
         print "retrieve"
         job = DockerJob.objects.filter(pk=int(job_pk))[0]
-        queryset = job.results.all().reverse()
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
+        queryset = job.results.all()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 

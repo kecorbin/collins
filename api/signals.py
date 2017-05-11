@@ -21,8 +21,7 @@ def restart_scheudler_after_creating_job(sender, instance=None, created=False, *
     """
     send a signal to the schedulers to restart when a new job is created
     """
-    if created:
-        restart_scheduler()
+    restart_scheduler()
 
 
 @receiver(post_delete, sender=DockerJob)

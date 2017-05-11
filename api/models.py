@@ -23,7 +23,6 @@ class Environment(models.Model):
 
 class Job(PeriodicTask):
     type = models.CharField(max_length=25, default="DockerJob")
-    last_result = models.CharField(max_length=10, default="Unknown")
     environment = models.ForeignKey(Environment,
                                     blank=True, null=True, default=None)
 

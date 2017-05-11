@@ -60,7 +60,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "  {\n    \"name\": \"{{$randomInt}}\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"latest\": null,\n    \"last_result\": \"Fail\",\n    \"enabled\": true,\n    \"interval\": {\n      \"id\": 1,\n      \"every\": 15,\n      \"period\": \"seconds\"\n    },\n    \"queue\": \"SITE_1\"\n  }"
+					"raw": "  {\n    \"name\": \"{{$randomInt}}\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"latest\": null,\n        \"enabled\": true,\n    \"interval\": {\n      \"id\": 1,\n      \"every\": 15,\n      \"period\": \"seconds\"\n    },\n    \"queue\": \"SITE_1\"\n  }"
 				},
 				"description": ""
 			},
@@ -101,7 +101,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "  {\n    \"name\": \"test_job_pass\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"active\": true,\n    \"last_result\": \"Pass\",\n    \"environment\": {\n      \"APIC_LOGIN\": \"admin\",\n      \"APIC_URL\": \"http://10.94.140.72\",\n      \"APIC_PASSWORD\": \"ins3965!\"\n    }\n  }"
+					"raw": "  {\n    \"name\": \"test_job_pass\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"active\": true,\n        \"environment\": {\n      \"APIC_LOGIN\": \"admin\",\n      \"APIC_URL\": \"http://10.94.140.72\",\n      \"APIC_PASSWORD\": \"ins3965!\"\n    }\n  }"
 				},
 				"description": "During integration tests, we create a job that executes every 15 seconds. Therefore, we should get results pretty immediately. "
 			},
@@ -178,7 +178,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "  {\n    \"name\": \"test_job_pass\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"active\": true,\n    \"last_result\": \"Pass\",\n    \"environment\": {\n      \"APIC_LOGIN\": \"admin\",\n      \"APIC_URL\": \"http://10.94.140.72\",\n      \"APIC_PASSWORD\": \"ins3965!\"\n    }\n  }"
+					"raw": "  {\n    \"name\": \"test_job_pass\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"active\": true,\n        \"environment\": {\n      \"APIC_LOGIN\": \"admin\",\n      \"APIC_URL\": \"http://10.94.140.72\",\n      \"APIC_PASSWORD\": \"ins3965!\"\n    }\n  }"
 				},
 				"description": "During integration tests, we create a job that executes every 15 seconds. Therefore, we should get results pretty immediately. "
 			},
@@ -241,7 +241,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "  {\n    \"name\": \"test_job_pass\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"active\": true,\n    \"last_result\": \"Pass\",\n    \"environment\": {\n      \"APIC_LOGIN\": \"admin\",\n      \"APIC_URL\": \"http://10.94.140.72\",\n      \"APIC_PASSWORD\": \"ins3965!\"\n    }\n  }"
+					"raw": "  {\n    \"name\": \"test_job_pass\",\n    \"type\": \"DockerJob\",\n    \"image\": \"always_pass\",\n    \"active\": true,\n        \"environment\": {\n      \"APIC_LOGIN\": \"admin\",\n      \"APIC_URL\": \"http://10.94.140.72\",\n      \"APIC_PASSWORD\": \"ins3965!\"\n    }\n  }"
 				},
 				"description": "During integration tests, we create a job that executes every 15 seconds. Therefore, we should get results pretty immediately. "
 			},

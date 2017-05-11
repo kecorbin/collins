@@ -41,8 +41,6 @@ class ResultsSerializer(serializers.HyperlinkedModelSerializer):
             # we simply reject the result and log it for now
             print("Could not find job for results")
 
-        job.last_result = validated_data['result']
-        job.save()
         return Result.objects.create(job=job, **validated_data)
 
 
@@ -52,6 +50,7 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
     interval = IntervalScheduleSerializer(partial=True)
     passed_count = serializers.SerializerMethodField()
     failed_count = serializers.SerializerMethodField()
+    last_result = serializers.SerializerMethodField()
 
     class Meta:
         model = DockerJob
@@ -59,12 +58,22 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         #           'processed', 'created', 'modified',)
         partial = True
         # fields = '__all__'
-        fields = ('id', 'name', 'type', 'image',
-                  'latest', 'last_result', 'environment',
+        fields = ('id', 'name', 'last_result', 'type', 'image',
+                  'latest', 'environment',
                   'enabled', 'interval', 'queue', 'passed_count',
                   'failed_count')
 
         lookup_field = 'id'
+
+    def get_last_result(self, obj):
+        # get last result if one is available, otherwise return 'unknown'
+        try:
+            ret = obj.results.first().result
+        except AttributeError:
+            # Newly created jobs will not have any results,
+            # Exception Value: 'NoneType' object has no attribute 'result'
+            ret = 'unknown'
+        return ret
 
     def get_passed_count(self, obj):
         return obj.results.filter(result="Passed").count()

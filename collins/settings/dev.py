@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'rest_framework_json_api',
     'django_celery_beat',
     'rest_framework',
-    'ui',
     'api',
 ]
 

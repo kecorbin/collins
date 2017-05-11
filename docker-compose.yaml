@@ -19,12 +19,13 @@ services:
   scheduler:
     image: collins
     build: .
-    entrypoint: /code/start_scheduler.sh
-    command: celery -A tasks worker --loglevel=info
+    command: python scheduler.py
     environment:
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
+      - SCHEDULER_API=http://api:8000/api/v1/schedulers/
     links:
       - rabbit
+      - api
     volumes:
       - ./:/code
     depends_on:

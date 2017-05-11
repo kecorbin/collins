@@ -1,13 +1,33 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from models import DockerJob, Scheduler
 
 
+
+def restart_scheduler():
+    """
+    helper to restart scheduler, gets called by signals
+
+    :return:
+    """
+    obj = Scheduler.objects.all()
+    for o in obj:
+        o.restart = True
+        o.save()
+
+
 @receiver(post_save, sender=DockerJob)
-def set_scheduler_restart_flag(sender, instance=None, created=False, **kwargs):
+def restart_scheudler_after_creating_job(sender, instance=None, created=False, **kwargs):
+    """
+    send a signal to the schedulers to restart when a new job is created
+    """
     if created:
-        print("trying to set restart flag; sender=", sender, "created=", created)
-        obj = Scheduler.objects.get(id=1)
-        print("Was:", obj.restart)
-        Scheduler.objects.select_related().filter(id=1).update(restart=True)
-        print("Now:", obj.restart)
+        restart_scheduler()
+
+
+@receiver(post_delete, sender=DockerJob)
+def restart_scheduler_after_deleting_job(sender, instance=None, created=False, **kwargs):
+    """
+    send a signal to the schedulers to restart when a job is deleted
+    """
+    restart_scheduler()

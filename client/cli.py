@@ -5,7 +5,6 @@ import os
 
 
 app = Celery('tasks', broker=os.getenv('RABBITMQ_URL'),
-                      backend=os.getenv("REDIS_URL"),
                       includes=['api.tasks']
              )
 

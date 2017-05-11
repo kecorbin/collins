@@ -8,13 +8,6 @@ services:
       - 5672:5672
       - 15672:15672
 
-  # Redis is where we store results (for now)
-  redis:
-    image: redis:2.8.19
-    hostname: redis
-    ports:
-      - 6379:6379
-
   # Celery beat
   scheduler:
     image: collins
@@ -66,35 +59,31 @@ services:
     image: collins-worker
     build: ./client/
     environment:
-      - REDIS_URL=redis://redis
       - SITE_NAME=SITE_1
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
       - RESULTS_API=http://api:8000/api/v1/results
     links:
       - rabbit
-      - redis
       - api
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - rabbit
-      - redis
+      - api
 
   # remote client
   site_2:
     image: collins-worker
     build: ./client/
     environment:
-      - REDIS_URL=redis://redis
       - SITE_NAME=SITE_2
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
       - RESULTS_API=http://api:8000/api/v1/results
     links:
       - rabbit
-      - redis
       - api
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - rabbit
-      - redis
+      - api

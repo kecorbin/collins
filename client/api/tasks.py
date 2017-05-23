@@ -5,7 +5,6 @@ import os
 from .callbacks import TaskCallback
 
 app = Celery('tasks', broker=os.getenv('RABBITMQ_URL'),
-                      backend=os.getenv("REDIS_URL"),
              )
 
 @app.task(bind=True)

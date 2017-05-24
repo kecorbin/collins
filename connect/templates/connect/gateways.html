@@ -1,0 +1,16 @@
+{% extends "connect/base.html" %}
+
+{# Make 'Gateways' highlighted in sidebar #}
+{% block sidebar %}
+{% include "connect/sidebar.html" with sidebar_active='Gateways' %}
+{% endblock sidebar %}
+
+{% block content %}
+
+
+{{ notice }}
+
+{% include "connect/gateway_list.html" %}
+
+
+{% endblock %}

@@ -1,0 +1,79 @@
+
+<div id="page-wrapper">
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-fw fa-table"></i>Launch Web Based CLI</h3>
+                </div>
+
+                <form action='/console/' method='post'>{% csrf_token %}
+                    <input type="hidden" name="remoteport" value="4200"/>
+                    <input type="hidden" name="remotehost" value="172.17.42.1"/>
+                    <input type="hidden" name="timeout" value="30"/>
+                    <input type='submit' value='Launch'/>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-fw fa-table"></i>Current Tunnels</h3>
+                </div>
+
+
+                <div class="table-responsive">
+                    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%%">
+
+                        <thead>
+                        <tr>
+                            <th>Connect Port</th>
+                            <th>Remote Host</th>
+                            <th>Remote Port</th>
+                            <th>Access URL</th>
+                            <th>Gateway</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for t in tunnels %}
+                        <tr>
+                            <td>{{ t.proxyport }}</td>
+                            <td>{{ t.remotehost }}</td>
+                            <td>{{ t.remoteport }}</td>
+                            <td><a href="{{ t.url}}">Click Here</a></td>
+                            <td>{{ t.gateway }}</td>
+
+
+                        </tr>
+
+
+
+                        {% endfor %}
+                        </tbody>
+
+                        <tfoot>
+                        <tr>
+                            <th>Connect Port</th>
+                            <th>Remote Host</th>
+                            <th>Remote Port</th>
+                            <th>Access URL</th>
+                            <th>Gateway</th>
+
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

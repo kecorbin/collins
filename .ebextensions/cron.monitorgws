@@ -1,0 +1,1 @@
+*/5 * * * * root source /opt/python/run/venv/bin/activate && /opt/python/current/app/manage.py healthcheck

@@ -1,0 +1,38 @@
+{% extends "connect/base.html" %}
+
+{% block content %}
+
+
+
+<div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                            <div class="col-lg-12">
+                                <h1 class="page-header">
+                                    Device Provisioning
+                                </h1>
+                                <ol class="breadcrumb">
+                                    <li class="active">
+                                        <i class="fa fa-dashboard"></i>
+
+                                    </li>
+                                    <form action="" method="POST" name="items">
+
+                                    Device
+                                            {{ form.device }}
+
+                                    Dealer
+                                            {{ form.dealer }}
+
+                                    <input type="submit" name="submit" class="btn" value="GO" />
+                                    </form>
+                                </ol>
+                            </div>
+                        </div>
+                </div>
+
+
+    {% endblock %}
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{% extends "connect/base.html" %}
+
+{# Make 'Tunnels' highlighted in sidebar #}
+{% block sidebar %}
+  {% include "connect/sidebar.html" with sidebar_active='Tunnels' %}
+{% endblock sidebar %}
+
+{% block content %}
+
+{% include "connect/create_tunnel.html" %}
+
+{% include "connect/create_console_button.html" %}
+
+{% include "connect/tunnel_list.html" %}
+
+{% endblock %}

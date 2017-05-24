@@ -1,0 +1,62 @@
+
+<html lang="en">
+{% include "connect/head.html" %}
+<body>
+{% block wrapper %}
+{% load staticfiles %}
+<div id="wrapper">
+
+    <!-- Navigation -->
+    {% block navbar %}
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="height:100px;" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'dashboard' %}">
+                {% block branding %}
+                    <div class="navbar-brand" style="top: 0px; padding-bottom: 0px; padding-top: 0px;">
+                        <img src="{%  static "/static/connect/img/greenlight_logo.png" %}"
+                        style=" top: 0px; padding-bottom: 0px; padding-top: 15px; padding-bottmax-width: 0px;" id="logo_big" alt="">
+         </div>
+
+{% endblock %}</a>
+        </div>
+
+        <!-- Top Menu Items -->
+        {% block topbar %}
+        {% include "connect/topbar.html" with sidebar_active='Dashboard' %}
+        {% endblock topbar %}
+  <!-- /.navbar-collapse -->
+    </nav>
+    {% endblock %}
+
+        {% block sidebar %}
+        {% include "connect/sidebar.html" with sidebar_active='Dashboard' %}
+        {% endblock sidebar %}
+
+    {% block container %}
+    <div id="page-wrapper">
+
+        <!--Process Messages-->
+        {% include "connect/messages.html" %}
+
+        <div class="container-fluid">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+    </div>
+    {% endblock %}
+</div>
+{% endblock %}
+
+
+
+</body>
+{% include "connect/scripts.html" %}
+</html>

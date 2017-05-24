@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<title>Greenlight</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin.css" rel="stylesheet">
+</head>
+<body class="page-body skin-black login-page login-form-fall">
+
+
+
+
+        <div class="login-container">
+                <div>
+                        <div class="login-content" style="width: 216px;">
+                                <a href="#" class="logo">
+                                    <img src="/static/janusbw.jpg" />
+                                </a>
+
+                                <!-- progress bar indicator -->
+
+                        </div>
+                </div>
+
+                <div class="login-progressbar">
+                        <div></div>
+                </div>
+                <div style="padding-top: 0px; text-align: center;">
+                    <noscript><h3><font color="white">It appears that you do not have JavaScript enabled!<br/>You will need to enable Javascript and then refresh this page to proceed.</font></h3></noscript>
+                </div>
+                <div class="login-form" style="padding-top: 0px;">
+                        <div class="login-content">                              
+                                                                                                  
+                                <div class="form-login-error">
+                                        <h3></h3>
+                                </div>
+                                <form action="/login/check" method="post">
+                                <p>Username: <input name="username" type="text"></p>
+                                <p>Password: <input name="password" type="password"></p>
+                                <input type="submit">
+                                </form>
+
+                                <div class="login-bottom-links" style="padding-top: 0px;">
+                                        <a href="forgot_pass" class="link">Forgot your password?</a>
+                                </div>
+                        </div>
+                </div>
+        </div>
+        
+	<!-- Bottom Scripts -->
+
+</body>
+</html>

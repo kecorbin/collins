@@ -1,0 +1,25 @@
+{% extends "connect/base.html" %}
+
+{% block content %}
+
+
+<div class="container">
+    <form action="" method="POST" name="">
+        <ul>
+            {% from "_formhelpers.html" import render_field %}
+            <form method=post action="/register">
+                <dl>
+
+                    {{ form.color }}
+
+
+                </dl>
+                <p><input type=submit value=Register>
+            </form>
+
+
+        </ul>
+        
+</div>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+files:
+  - /var/log/janus/*
+  - /var/log/httpd/access_log
+  - /var/log/httpd/error_log
+destination:
+  host: logs2.papertrailapp.com
+  port: 22945   # NOTE: change to your Papertrail port
+  protocol: tls

@@ -94,6 +94,17 @@ if 'RDS_DB_NAME' in os.environ:
             'PORT': os.environ['RDS_PORT'],
         }
     }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'mysecretpassword',
+            'HOST': 'localhost',
+            'PORT': '5432'
+        }
+    }
 
 
 # Password validation

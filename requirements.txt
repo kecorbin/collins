@@ -8,3 +8,4 @@ djangorestframework-jsonapi
 django-jsonfield
 django-html-field
 django-cors-headers
+psycopg2==2.7.1

@@ -35,12 +35,15 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'corsheaders',
+    'rest_framework.authtoken',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework_json_api',
     'django_celery_beat',
     'rest_framework',
     'api',
+    'connect',
+    'discover',
 ]
 
 MIDDLEWARE_CLASSES = [

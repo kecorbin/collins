@@ -49,3 +49,4 @@ admin.site.unregister(PeriodicTask)
 
 # crontabs are not currently supported
 admin.site.unregister(CrontabSchedule)
+

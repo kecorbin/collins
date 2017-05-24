@@ -111,6 +111,40 @@ class DockerJobSerializer(serializers.HyperlinkedModelSerializer):
         return job
 
 
+    def update(self, instance, validated_data):
+        # get interval information from request
+        # and match up to existing Interval
+        for k,v in validated_data.items():
+
+            print k
+            print v
+        # props we currently update
+        if 'name' in validated_data:
+            instance.name = validated_data['name']
+        if 'image' in validated_data:
+            instance.image = validated_data['image']
+        if 'queue' in validated_data:
+            instance.queue = validated_data['queue']
+        if 'enabled' in validated_data:
+            instance.enabled = validated_data['enabled']
+
+        if 'interval' in validated_data:
+            interval_data = validated_data.pop('interval')
+            period = interval_data['period']
+            every = interval_data['every']
+            interval = IntervalSchedule.objects.get_or_create(period=period,
+                                                              every=every)[0]
+
+            instance.interval = interval
+
+        if 'environment' in validated_data:
+            env_data = validated_data.pop('environment')
+            env = Environment.objects.get_or_create(env_data)
+            instance.environment = env
+
+        instance.save()
+        return instance
+
 class SchedulerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:

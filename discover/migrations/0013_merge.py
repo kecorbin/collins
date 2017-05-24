@@ -9,7 +9,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('discover', '0012_speedtestresult_job'),
-        ('discover', '0009_auto_20160227_1228'),
     ]
 
     operations = [

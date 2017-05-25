@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import Scan, Host, Service, SpeedTest
+from models import Job, Host, Service, SpeedTestResult
 
 
 class CustomJobAdmin(admin.ModelAdmin):
@@ -20,7 +20,7 @@ class CustomSpeedTestAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'created', 'results',)
     search_fields = ('id', 'user__username',)
 
-admin.site.register(Scan, CustomJobAdmin)
-admin.site.register(SpeedTest, CustomSpeedTestAdmin)
+admin.site.register(Job, CustomJobAdmin)
 admin.site.register(Host, CustomHostAdmin)
 admin.site.register(Service, CustomServiceAdmin)
+admin.site.register(SpeedTestResult, CustomSpeedTestAdmin)

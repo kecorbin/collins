@@ -2,6 +2,7 @@ django
 djangorestframework
 django-celery-beat
 django-filter
+django-filters
 docker
 drf-nested-routers
 djangorestframework-jsonapi

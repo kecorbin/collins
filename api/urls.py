@@ -5,7 +5,8 @@ from api.views import (JobViewSet,
                        IntervalScheduleViewSet,
                        SchedulerViewSet,
                        PluginViewSet)
-from discover.views import JobViewSet, SpeedTestResultViewSet
+from discover.views import JobViewSet as DiscoverJobViewSet
+from discover.views import SpeedTestResultViewSet
 from connect.views import (CloudServerViewSet, CreateTunnelViewSet,
                            TunnelListViewSet, GatewayViewSet,
                            GatewayUpdateView, ProxyPortViewSet)
@@ -13,7 +14,7 @@ from connect.views import (CloudServerViewSet, CreateTunnelViewSet,
 from rest_framework import routers
 from rest_framework_nested.routers import NestedSimpleRouter
 
-router = routers.DefaultRouter(trailing_slash=False)
+router = routers.DefaultRouter(trailing_slash=True)
 
 router.register(r'jobs',
                 JobViewSet,
@@ -58,13 +59,9 @@ router.register(r'createtunnel',
                 base_name='create-tunnel')
 router.register(r'cloudserver',
                 CloudServerViewSet)
-router.register(r'jobs',
-                JobViewSet,
-                base_name='jobs-detail')
 router.register(r'scans',
-                JobViewSet,
+                DiscoverJobViewSet,
                 base_name='jobs-detail')
-
 router.register(r'speedtests',
                 SpeedTestResultViewSet,
                 base_name='speedtests')

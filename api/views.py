@@ -2,12 +2,13 @@
 from __future__ import unicode_literals
 from rest_framework.response import Response
 from rest_framework import viewsets, mixins
-from models import DockerJob, Result, Environment, Scheduler
+from models import DockerJob, Result, Environment, Scheduler, Plugin
 from serializers import (ResultsSerializer,
                          DockerJobSerializer,
                          EnvironmentSerializer,
                          IntervalScheduleSerializer,
-                         SchedulerSerializer
+                         SchedulerSerializer,
+                         PluginSerializer
                          )
 from django_celery_beat.models import IntervalSchedule
 
@@ -72,3 +73,10 @@ class SchedulerViewSet(viewsets.ModelViewSet):
     """
     serializer_class = SchedulerSerializer
     queryset = Scheduler.objects.all()
+
+class PluginViewSet(viewsets.ModelViewSet):
+    """
+    This is the API endpoint for working with Plugins.
+    """
+    serializer_class = PluginSerializer
+    queryset = Plugin.objects.all()

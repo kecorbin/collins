@@ -57,7 +57,7 @@ services:
   # remote client
   site_1:
     image: collins-worker
-    build: ./client/
+    build: ./clients/client/
     environment:
       - SITE_NAME=SITE_1
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
@@ -74,7 +74,7 @@ services:
   # remote client
   site_2:
     image: collins-worker
-    build: ./client/
+    build: ./clients/client/
     environment:
       - SITE_NAME=SITE_2
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//

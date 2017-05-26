@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import DockerJob, Result, Environment, Scheduler
+from api.models import DockerJob, Result, Environment, Scheduler, Plugin
 from django_celery_beat.models import IntervalSchedule
 import logging
 import json
@@ -151,3 +151,11 @@ class SchedulerSerializer(serializers.HyperlinkedModelSerializer):
         model = Scheduler
         lookup_field = 'id'
         fields = ('id', 'name', 'restart')
+
+
+class PluginSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Plugin
+        lookup_field = 'id'
+        fields = ('company', 'description', 'cardimageurl', 'dockerimage')

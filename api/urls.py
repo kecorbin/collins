@@ -3,7 +3,8 @@ from api.views import (JobViewSet,
                        ResultViewSet,
                        EnvironmentViewSet,
                        IntervalScheduleViewSet,
-                       SchedulerViewSet)
+                       SchedulerViewSet,
+                       PluginViewSet)
 from discover.views import JobViewSet, SpeedTestResultViewSet
 from connect.views import (CloudServerViewSet, CreateTunnelViewSet,
                            TunnelListViewSet, GatewayViewSet,
@@ -70,3 +71,6 @@ router.register(r'speedtests',
 router.register(r'proxyport',
                 ProxyPortViewSet,
                 base_name='proxyport')
+router.register(r'plugins',
+                PluginViewSet,
+                base_name='plugins')

@@ -75,3 +75,12 @@ class Result(models.Model):
 class Scheduler(models.Model):
     name = models.CharField(max_length=20)
     restart = models.BooleanField(default=True)
+
+class Plugin(models.Model):
+    """
+    a plugin is a representation of a docker hub image
+    """
+    company = models.CharField(max_length=20)
+    description = models.CharField(max_length=70)
+    cardimageurl = models.URLField()
+    dockerimage = models.CharField(max_length=100)

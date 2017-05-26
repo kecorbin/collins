@@ -16,6 +16,7 @@ services:
     environment:
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
       - SCHEDULER_API=http://api:8000/api/v1/schedulers/
+      - DJANGO_SETTINGS_MODULE="collins.settings.prod"
     links:
       - rabbit
       - api

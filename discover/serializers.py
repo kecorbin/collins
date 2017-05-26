@@ -1,23 +1,22 @@
 from rest_framework import serializers
-from models import Job, SpeedTestResult
+from models import Scan, SpeedTest
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class JobSerializer(serializers.HyperlinkedModelSerializer):
+class ScanSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Job
+        model = Scan
         fields = ('type', 'destination', 'ports', 'id', 'results',
                   'processed', 'created', 'modified',)
         partial = True
 
 
-class SpeedTestResultSerializer(serializers.HyperlinkedModelSerializer):
+class SpeedTestSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = SpeedTestResult
-        fields = ('id', 'results', 'destination', 'ports', 'processed',
-                  'job', 'created',)
+        model = SpeedTest
+        fields = ('id', 'results', 'type', 'processed', 'created',)
         partial = True

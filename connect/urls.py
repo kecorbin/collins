@@ -1,29 +1,27 @@
 from django.conf.urls import include, url
 from rest_framework.authtoken import views as restviews
-from .views import (
-    DashboardView,
-    GatewayListView,
-    TunnelListView,
-    ConsoleTunnel,
-)
+from rest_framework import routers
+from views import GatewayViewSet, TunnelListViewSet, CreateTunnelViewSet, CloudServerViewSet, ProxyPortViewSet
+router = routers.DefaultRouter(trailing_slash=True)
+router.register(r'gateway',
+                GatewayViewSet,
+                base_name='gateway-detail')
+router.register(r'gateways',
+                GatewayViewSet,
+                base_name='gateway-detail')
 
-urlpatterns = [
-    # API URLS
-    url(r'^grappelli/',
-        include('grappelli.urls')),
-    url(r'^api/v1/auth/', restviews.obtain_auth_token),
+router.register(r'tunnels',
+                TunnelListViewSet,
+                base_name='tunnel-detail')
 
-    # UI URLS
-    url(r'^gateways/$',
-        GatewayListView.as_view(),
-        name='gateway-list'),
-    url(r'^tunnels/$',
-        TunnelListView.as_view(),
-        name='tunnel-list'),
-    url(r'^console/',
-        ConsoleTunnel.as_view(),
-        name='console'),
-    url(r'^$',
-        DashboardView.as_view(),
-        name='dashboard'),
-]
+router.register(r'tunnel',
+                TunnelListViewSet,
+                base_name='tunnel-detail')
+router.register(r'createtunnel',
+                CreateTunnelViewSet,
+                base_name='create-tunnel')
+router.register(r'cloudserver',
+                CloudServerViewSet)
+router.register(r'proxyport',
+                ProxyPortViewSet,
+                base_name='proxyport')

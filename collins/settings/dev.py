@@ -42,10 +42,9 @@ INSTALLED_APPS = [
     'rest_framework_json_api',
     'rest_framework',
     'corsheaders',
-
-    'api',
-    'connect',
     'discover',
+    'connect',
+    'act'
 ]
 
 MIDDLEWARE_CLASSES = [

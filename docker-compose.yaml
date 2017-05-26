@@ -62,7 +62,7 @@ services:
     environment:
       - SITE_NAME=SITE_1
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
-      - RESULTS_API=http://api:8000/api/v1/results
+      - RESULTS_API=http://api:8000/api/v1/results/
     links:
       - rabbit
       - api
@@ -79,7 +79,7 @@ services:
     environment:
       - SITE_NAME=SITE_2
       - RABBITMQ_URL=pyamqp://guest:guest@rabbit//
-      - RESULTS_API=http://api:8000/api/v1/results
+      - RESULTS_API=http://api:8000/api/v1/results/
     links:
       - rabbit
       - api

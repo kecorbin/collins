@@ -1,18 +1,11 @@
-from django.conf.urls import url
-from views import JobListView, JobDetailView, SpeedTestResultsListView
+from rest_framework import routers
+from discover.views import ScanViewSet, SpeedTestViewSet
 
-urlpatterns = [
-               url(r'jobs/$',
-                   JobListView.as_view(),
-                   name='job_list'),
+router = routers.DefaultRouter(trailing_slash=True)
+router.register(r'scans',
+                ScanViewSet,
+                base_name='scans-list')
 
-               url(r'^jobs/(?P<pk>\d+)/',
-                   JobDetailView.as_view(
-                       template_name='discover/job_detail.html'),
-                   name='job-detail'),
-
-               url(r'^speedtests/$',
-                   SpeedTestResultsListView.as_view(
-                       template_name='discover/speedtests.html'),
-                   name='speedtest_list')
-               ]
+router.register(r'speedtests',
+                SpeedTestViewSet,
+                base_name='speedtests-list')

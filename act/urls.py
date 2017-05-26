@@ -1,20 +1,32 @@
-from api.views import (JobViewSet,
+from act.views import (JobViewSet,
                        JobResultViewSet,
                        ResultViewSet,
                        EnvironmentViewSet,
                        IntervalScheduleViewSet,
                        SchedulerViewSet,
                        PluginViewSet)
-from discover.views import JobViewSet as DiscoverJobViewSet
-from discover.views import SpeedTestResultViewSet
-from connect.views import (CloudServerViewSet, CreateTunnelViewSet,
-                           TunnelListViewSet, GatewayViewSet,
-                           GatewayUpdateView, ProxyPortViewSet)
 
-from rest_framework import routers
+from discover.urls import router as discover_router
+from connect.urls import router as connect_router
 from rest_framework_nested.routers import NestedSimpleRouter
 
-router = routers.DefaultRouter(trailing_slash=True)
+from rest_framework import routers
+
+
+class DefaultRouter(routers.DefaultRouter):
+    """
+    Extends `DefaultRouter` class to add a method for extending url routes from another router.
+    """
+    def extend(self, router):
+        """
+        Extend the routes with url routes of the passed in router.
+
+        Args:
+             router: SimpleRouter instance containing route definitions.
+        """
+        self.registry.extend(router.registry)
+
+router = DefaultRouter(trailing_slash=True)
 
 router.register(r'jobs',
                 JobViewSet,
@@ -44,30 +56,10 @@ router.register(r'schedulers',
                 SchedulerViewSet,
                 base_name='scheduler-detail')
 
-router.register(r'gateway',
-                GatewayViewSet,
-                base_name='gateway-detail')
-router.register(r'tunnels',
-                TunnelListViewSet,
-                base_name='tunnel-detail')
-
-router.register(r'tunnel',
-                TunnelListViewSet,
-                base_name='tunnel-detail')
-router.register(r'createtunnel',
-                CreateTunnelViewSet,
-                base_name='create-tunnel')
-router.register(r'cloudserver',
-                CloudServerViewSet)
-router.register(r'scans',
-                DiscoverJobViewSet,
-                base_name='jobs-detail')
-router.register(r'speedtests',
-                SpeedTestResultViewSet,
-                base_name='speedtests')
-router.register(r'proxyport',
-                ProxyPortViewSet,
-                base_name='proxyport')
 router.register(r'plugins',
                 PluginViewSet,
                 base_name='plugins')
+
+
+router.extend(discover_router)
+router.extend(connect_router)

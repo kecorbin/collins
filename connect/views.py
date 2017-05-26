@@ -19,7 +19,7 @@ from connect.forms import TunnelForm, ConsoleForm
 from connect import serializers
 from connect.helpers import get_client_ip
 from connect.models import Tunnel, Gateway, ProxyPort, CloudServer
-from discover.models import Job, SpeedTestResult
+from discover.models import Scan, SpeedTest
 
 logger = logging.getLogger(__name__)
 
@@ -191,7 +191,7 @@ class GatewayViewSet(viewsets.ModelViewSet):
     # queryset = Gateway.objects.all()
     serializer_class = serializers.GatewaySerializer
     permission_classes = (permissions.IsAuthenticated,)
-
+    lookup_field = 'hostname'
     def perform_create(self, serializer):
         wanip = get_client_ip(self.request)
         serializer.save(wanip=wanip)
@@ -207,27 +207,14 @@ class GatewayViewSet(viewsets.ModelViewSet):
             qs = Gateway.objects.filter(user=user)
         return qs
 
-
-class GatewayUpdateView(generics.RetrieveUpdateAPIView):
-    """
-    API Endpoint for Updating Gateway
-    """
-    serializer_class = serializers.GatewaySerializer
-    lookup_field = 'hostname'
-    lookup_url_kwarg = 'hostname'
-
-    def get_queryset(self):
-        """
-        Return a list of all the gateways for the current user
-        """
-        user = self.request.user
-        Gateway.objects.filter(user=user)
-        return Gateway.objects.filter(user=user)
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
     def update(self, request, *args, **kwargs):
+        """
+        PUT is supported for operations like u
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         serializer = serializers.GatewaySerializer(data=request.data,
                                                    partial=True)
 
@@ -251,6 +238,51 @@ class GatewayUpdateView(generics.RetrieveUpdateAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# DEPRACATED
+
+# class GatewayUpdateView(generics.RetrieveUpdateAPIView):
+#     """
+#     API Endpoint for Updating Gateway
+#     """
+#     serializer_class = serializers.GatewaySerializer
+#     lookup_field = 'hostname'
+#     lookup_url_kwarg = 'hostname'
+#
+#     def get_queryset(self):
+#         """
+#         Return a list of all the gateways for the current user
+#         """
+#         user = self.request.user
+#         Gateway.objects.filter(user=user)
+#         return Gateway.objects.filter(user=user)
+#
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
+#
+#     def update(self, request, *args, **kwargs):
+#         serializer = serializers.GatewaySerializer(data=request.data,
+#                                                    partial=True)
+#
+#         if serializer.is_valid():
+#             # We use the following lines to determine what the gateway is
+#             # allowed to update on the server side
+#             obj = self.get_object()
+#             obj.version = request.data['version']
+#             obj.pubkey = request.data['pubkey']
+#             obj.lanip = request.data['lanip']
+#             obj.mac = request.data['mac']
+#             # Older gateways may not set the healthy flag
+#             if 'healthy' in request.data:
+#                 obj.healthy = request.data['healthy']
+#             else:
+#                 obj.healthy = False
+#             obj.wanip = get_client_ip(request)
+#             obj.save()
+#             serializer = serializers.GatewaySerializer(obj)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
 
 class TunnelListViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TunnelsSerializer

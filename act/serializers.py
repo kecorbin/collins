@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import DockerJob, Result, Environment, Scheduler, Plugin
+from act.models import DockerJob, Result, Environment, Scheduler, Plugin
 from django_celery_beat.models import IntervalSchedule
 import logging
 import json

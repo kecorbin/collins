@@ -17,17 +17,36 @@ from django.conf.urls import url
 from django.conf.urls import include
 from django.contrib import admin
 from rest_framework.authtoken import views as restviews
-from api.urls import router as api
-from api.urls import job_results_router
+from act.urls import router as act
+from act.urls import job_results_router
+from discover.urls import router as discover_router
+from connect.urls import router as connect_router
+from act.urls import router as act_router
+from rest_framework import routers
 
 
+class DefaultRouter(routers.DefaultRouter):
+    """
+    Extends `DefaultRouter` class to add a method for extending url routes from another router.
+    """
+    def extend(self, router):
+        """
+        Extend the routes with url routes of the passed in router.
 
+        Args:
+             router: SimpleRouter instance containing route definitions.
+        """
+        self.registry.extend(router.registry)
 
+router = DefaultRouter(trailing_slash=True)
+router.extend(act_router)
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/auth/', restviews.obtain_auth_token),
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
-    url(r'^api/v1/', include(api.urls)),
-    url(r'^api/v1/', include(job_results_router.urls)),
+    url(r'^api/v1/', include(router.urls)),
+    url(r'^api/v1/act/', include(act_router.urls)),
+    url(r'^api/v1/discover/', include(discover_router.urls)),
+    url(r'^api/v1/connect/', include(connect_router.urls)),
 ]

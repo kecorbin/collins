@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 # Register your models here.
-from api.models import DockerJob, Result, Environment, Scheduler
+from act.models import DockerJob, Result, Environment, Scheduler
 from django_celery_beat.admin import PeriodicTask, CrontabSchedule
 
 

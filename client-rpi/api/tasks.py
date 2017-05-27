@@ -25,5 +25,6 @@ def run_image(jobId, image, command=None, **kwargs):
     celery_result = client.start(container)
     container_output = client.logs(container, stdout=True, stderr=True) 
     # we need to pass jobid to the callback
-    collins_result = TaskCallback(jobId, container_output)
+    # older versions of the docker-py return strings not json
+    collins_result = TaskCallback(jobId, json.dumps(container_output))
     return celery_result

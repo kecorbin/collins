@@ -20,11 +20,14 @@ def run_image(jobId, image, command=None, **kwargs):
     client = Client(base_url='unix://var/run/docker.sock') 
     # older versions of docker-py don't pull the image on start/run
     client.pull(image)
-    container = client.create_container(image, command=None, environment=kwargs) 
 
+    # docker run ..
+    container = client.create_container(image, command=None, environment=kwargs)
     celery_result = client.start(container)
-    container_output = client.logs(container, stdout=True, stderr=True) 
+    client.wait(container)
+    container_output = client.logs(container, stderr=True)
     # we need to pass jobid to the callback
     # older versions of the docker-py return strings not json
-    collins_result = TaskCallback(jobId, json.dumps(container_output))
+    collins_result = TaskCallback(jobId, container_output)
     return celery_result
+

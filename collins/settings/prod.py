@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'rest_framework_json_api',
     'rest_framework',
+    'rest_framework_swagger',
     'corsheaders',
     'discover',
     'connect',
@@ -147,6 +148,14 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -160,6 +169,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_URL = '/api-auth/login/'
+LOGIN_REDIRECT_URL = '/api-docs'
+LOGOUT_URL = 'api-auth/logout'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -167,7 +179,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = "/static"
 APPEND_SLASH = True
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Needed to get     request.is_secure() == True
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',

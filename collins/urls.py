@@ -22,6 +22,9 @@ from connect.urls import router as connect_router
 from act.urls import router as act_router
 from inventory.urls import router as inventory_router
 from rest_framework import routers
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='interthings.io API')
 
 
 class DefaultRouter(routers.DefaultRouter):
@@ -41,6 +44,7 @@ router = DefaultRouter(trailing_slash=True)
 router.extend(act_router)
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api-docs', schema_view),
     url(r'^api/v1/auth/', restviews.obtain_auth_token),
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),

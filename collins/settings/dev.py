@@ -41,12 +41,14 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'rest_framework_json_api',
     'rest_framework',
+    'rest_framework_swagger',
     'corsheaders',
     'discover',
     'connect',
     'act',
     'inventory',
 ]
+
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -133,6 +135,14 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -147,7 +157,15 @@ USE_L10N = True
 USE_TZ = True
 
 
+LOGIN_URL = '/api-auth/login/'
+LOGIN_REDIRECT_URL = '/api-docs'
+LOGOUT_URL = 'api-auth/logout'
+
+APPEND_SLASH = True
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-APPEND_SLASH=True
+
 STATIC_URL = '/static/'
+STATIC_ROOT = "/static"

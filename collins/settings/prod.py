@@ -45,8 +45,7 @@ INSTALLED_APPS = [
     'discover',
     'connect',
     'act',
-
-
+    'inventory',
 ]
 
 

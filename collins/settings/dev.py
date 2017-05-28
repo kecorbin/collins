@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'discover',
     'connect',
-    'act'
+    'act',
+    'inventory',
 ]
 
 MIDDLEWARE_CLASSES = [

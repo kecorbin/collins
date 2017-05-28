@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from django.db import models
 
 
@@ -14,14 +13,17 @@ class BootFlag(models.BooleanField):
 
 class System(models.Model):
     """
-    A Greenlight System with some extensions
+    A System is a group of devices with or without a controller
     """
-
-    boot_flag = BootFlag()
-    ctl_mfg = models.CharField(max_length=25)
     job_name = models.CharField(max_length=25)
-    mod_version = models.CharField(max_length=25)
-    system_id = models.CharField(max_length=25)
+    system_id = models.CharField(unique=True, max_length=25)
+    ctl_mfg = models.CharField(max_length=25, default='unknown')
+    mod_version = models.CharField(max_length=25, default='unknown')
+    boot_flag = BootFlag()
+
+
+
+
 
 class Device(models.Model):
     dev_name = models.CharField(max_length=25)

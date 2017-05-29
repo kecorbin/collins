@@ -1,0 +1,15 @@
+{% extends "rest_framework_swagger/base.html" %}
+{% load staticfiles %}
+
+
+{% block extra_styles %}
+    <link href='{% static "rest_framework_swagger/css/2/theme-monokai.css" %}' media='screen' rel='stylesheet' type='text/css'/>
+{% endblock %}
+
+{% block logo %}
+    <a id="logo" href="http://swagger.io">
+        <!--<img class="logo__img" alt="swagger" height="30" width="30" src="{% static 'rest_framework_swagger/images/logo_small.png' %}" />-->
+        <span class="logo__title">interthings.io interactive API <documentation></documentation> </span>
+    </a>
+{% endblock %}
+

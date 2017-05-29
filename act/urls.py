@@ -12,21 +12,7 @@ from rest_framework_nested.routers import NestedSimpleRouter
 
 from rest_framework import routers
 
-
-class DefaultRouter(routers.DefaultRouter):
-    """
-    Extends `DefaultRouter` class to add a method for extending url routes from another router.
-    """
-    def extend(self, router):
-        """
-        Extend the routes with url routes of the passed in router.
-
-        Args:
-             router: SimpleRouter instance containing route definitions.
-        """
-        self.registry.extend(router.registry)
-
-router = DefaultRouter(trailing_slash=True)
+router = routers.DefaultRouter(trailing_slash=True)
 
 router.register(r'jobs',
                 JobViewSet,
@@ -60,6 +46,3 @@ router.register(r'plugins',
                 PluginViewSet,
                 base_name='plugins')
 
-
-router.extend(discover_router)
-router.extend(connect_router)

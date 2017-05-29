@@ -66,10 +66,11 @@ CORS_ORIGIN_ALLOW_ALL=True
 
 ROOT_URLCONF = 'collins.urls'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,6 +82,21 @@ TEMPLATES = [
         },
     },
 ]
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'sitestatic')
 
 WSGI_APPLICATION = 'collins.wsgi.application'
 
@@ -154,6 +170,7 @@ SWAGGER_SETTINGS = {
             'type': 'basic'
         }
     },
+
 }
 
 # Internationalization
@@ -173,14 +190,6 @@ LOGIN_URL = '/api-auth/login/'
 LOGIN_REDIRECT_URL = '/api-docs'
 LOGOUT_URL = 'api-auth/logout'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
-STATIC_URL = '/static/'
-STATIC_ROOT = "/static"
 APPEND_SLASH = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Needed to get     request.is_secure() == True
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-]
+

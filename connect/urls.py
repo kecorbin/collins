@@ -1,8 +1,8 @@
-from django.conf.urls import include, url
-from rest_framework.authtoken import views as restviews
 from rest_framework import routers
 from views import GatewayViewSet, TunnelListViewSet, CreateTunnelViewSet, CloudServerViewSet, ProxyPortViewSet
+
 router = routers.DefaultRouter(trailing_slash=True)
+
 router.register(r'gateway',
                 GatewayViewSet,
                 base_name='gateway-detail')

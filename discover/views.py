@@ -18,7 +18,24 @@ logger = logging.getLogger(__name__)
 
 class ScanViewSet(viewsets.ModelViewSet):
     """
-    This is the API endpoint for working with jobs.
+    Scan
+    retrieve:
+        get a scan
+
+    list:
+        get all scans
+
+    create:
+        create a scan
+
+    delete:
+        delete a scan
+
+    partial_update:
+        update fields on a scan
+
+    update:
+        update a scan
     """
     serializer_class = serializers.ScanSerializer
     filter_backends = (filters.DjangoFilterBackend,)
@@ -39,7 +56,23 @@ class ScanViewSet(viewsets.ModelViewSet):
 
 class SpeedTestViewSet(viewsets.ModelViewSet):
     """
-    This is the API endpoint for working with jobs.
+    retrieve:
+        get a speed test
+
+    list:
+        list all speed tests
+
+    create:
+        create a speed test
+
+    delete:
+        delete a speed test
+
+    partial_update:
+        update fields on a speed test
+
+    update:
+        update a speed test
     """
     serializer_class = serializers.SpeedTestSerializer
     filter_backends = (filters.DjangoFilterBackend,)

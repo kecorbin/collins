@@ -184,10 +184,26 @@ Views for API Endpoints
 
 
 class GatewayViewSet(viewsets.ModelViewSet):
+    """
+    retrieve:
+        get a gateway
 
+    list:
+        list all gateways
+
+    create:
+        create a gateway
+
+    delete:
+        delete a gateway
+
+    partial_update:
+        update fields on a gateway
+
+    update:
+        update a gateway
     """
-    API endpoint for working with gateways
-    """
+
     # queryset = Gateway.objects.all()
     serializer_class = serializers.GatewaySerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -209,11 +225,7 @@ class GatewayViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         """
-        PUT is supported for operations like u
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
+        update a Gateway
         """
         serializer = serializers.GatewaySerializer(data=request.data,
                                                    partial=True)
@@ -285,6 +297,26 @@ class GatewayViewSet(viewsets.ModelViewSet):
 #
 
 class TunnelListViewSet(viewsets.ModelViewSet):
+    """
+    retrieve:
+        get a tunnel
+
+    list:
+        list all tunnels
+
+    create:
+        create a tunnel
+
+    delete:
+        delete a tunnel
+
+    partial_update:
+        update fields on a tunnel
+
+    update:
+        update a tunnel
+    """
+
     serializer_class = serializers.TunnelsSerializer
     permissions_classes = (permissions.IsAuthenticated,)
     filter_backends = (filters.DjangoFilterBackend,)
@@ -320,7 +352,17 @@ class TunnelListViewSet(viewsets.ModelViewSet):
 
 class CreateTunnelViewSet(viewsets.ModelViewSet):
     """
-    This endpoint will be deprecated in future release
+    create:
+        create a tunnel
+
+    delete:
+        delete a tunnel
+
+    partial_update:
+        update fields on a tunnel
+
+    update:
+        update a tunnel
     """
     serializer_class = serializers.CreateTunnelSerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -354,6 +396,26 @@ class CreateTunnelViewSet(viewsets.ModelViewSet):
 
 
 class CloudServerViewSet(viewsets.ModelViewSet):
+    """
+    retrieve:
+        get a cloudserver
+
+    list:
+        list all cloudservers
+
+    create:
+        create a cloudserver
+
+    delete:
+        delete a cloudserver
+
+    partial_update:
+        update fields on a cloudserver
+
+    update:
+        update a cloudserver
+    """
+
     queryset = CloudServer.objects.all()
     serializer_class = serializers.CloudServerSerializer
     permission_classes = (permissions.IsAdminUser,)
@@ -362,6 +424,26 @@ class CloudServerViewSet(viewsets.ModelViewSet):
 
 
 class ProxyPortViewSet(viewsets.ModelViewSet):
+    """
+    retrieve:
+        get a proxyport
+
+    list:
+        list all proxyports
+
+    create:
+        create a proxyport
+
+    delete:
+        delete a proxyport
+
+    partial_update:
+        update fields on a proxyport
+
+    update:
+        update a proxyport
+    """
+
     queryset = ProxyPort.objects.all()
     serializer_class = serializers.ProxyPortSerializer
     permission_classes = (permissions.IsAdminUser,)

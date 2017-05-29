@@ -9,10 +9,25 @@ import serializers
 
 class SystemViewSet(viewsets.ModelViewSet):
     """
-    This is the API endpoint for working with systems.
+    retrieve:
+        get a system
 
-    A system is a group of devices which may or may not have a controller associated with them
+    list:
+        list all systems
+
+    create:
+        create a system
+
+    delete:
+        delete a system
+
+    partial_update:
+        update fields on a system
+
+    update:
+        update a system
     """
+
     serializer_class = serializers.SystemSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     permissions_classes = (permissions.IsAuthenticated,)
@@ -28,9 +43,23 @@ class SystemViewSet(viewsets.ModelViewSet):
 
 class DeviceViewSet(viewsets.ModelViewSet):
     """
-    This is the API endpoint for working with systems.
+    retrieve:
+        get a device
 
-    A system is a group of devices which may or may not have a controller associated with them
+    list:
+        list all devices
+
+    create:
+        create a device
+
+    delete:
+        delete a device
+
+    partial_update:
+        update fields on a device
+
+    update:
+        update a device
     """
     serializer_class = serializers.DeviceSerializer
     permissions_classes = (permissions.IsAuthenticated,)

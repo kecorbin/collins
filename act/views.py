@@ -21,13 +21,49 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
 
 
 class IntervalScheduleViewSet(viewsets.ModelViewSet):
+    """
+    retrieve:
+        get a interval schedule
+
+    list:
+        list interval schedules
+
+    create:
+        create an interval schedule
+
+    delete:
+        delete an interval schedule
+
+    partial_update:
+        update fields on an interval schedule
+
+    update:
+        update an interval schedule
+    """
+
     serializer_class = IntervalScheduleSerializer
     queryset = IntervalSchedule.objects.all()
 
 
 class JobViewSet(viewsets.ModelViewSet):
     """
-    This is the API endpoint for working with jobs.
+    retrieve:
+        get a job
+
+    list:
+        list all jobs
+
+    create:
+        create a job
+
+    delete:
+        delete a job
+
+    partial_update:
+        update fields on a job
+
+    update:
+        update a job
     """
     serializer_class = DockerJobSerializer
     queryset = DockerJob.objects.all()
@@ -37,11 +73,26 @@ class JobResultViewSet(viewsets.GenericViewSet,
                        mixins.ListModelMixin,
                        mixins.RetrieveModelMixin):
     """
-    All results
+    retrieve:
+        get a job result
 
-    ?jobId=<job_id>
+    list:
+        list all job results
 
+    create:
+        create a job result
+
+    delete:
+        delete a job result
+
+    partial_update:
+        update fields on a job result
+
+    update:
+        update a job result
     """
+
+
     serializer_class = ResultsSerializer
     queryset = Result.objects.all()
 

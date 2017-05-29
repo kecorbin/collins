@@ -1,25 +1,13 @@
 import logging
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.contrib.auth.models import update_last_login
-from django.http import HttpResponseRedirect, HttpResponseForbidden
-from django.shortcuts import render
-from django.views.generic import TemplateView
-from django.views.generic.edit import FormView
-from django.views.generic.list import ListView
-from django.views.generic.edit import FormMixin
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework import viewsets
-from rest_framework import generics
 from rest_framework import filters
-
-from connect.forms import TunnelForm, ConsoleForm
 from connect import serializers
 from connect.helpers import get_client_ip
 from connect.models import Tunnel, Gateway, ProxyPort, CloudServer
-from discover.models import Scan, SpeedTest
 
 logger = logging.getLogger(__name__)
 
@@ -28,158 +16,8 @@ def get_user_ip(request):
     print request
 
 
-class LoginRequiredMixin(object):
-    """
-    Mixin with another class to ensure that a user is logged in before
-    viewing.
-    """
-
-    @classmethod
-    def as_view(cls, **kwargs):
-        view = super(LoginRequiredMixin, cls).as_view(**kwargs)
-        return login_required(view)
-
-
-class DashboardView(LoginRequiredMixin, TemplateView):
-    template_name = 'connect/index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DashboardView, self).get_context_data(**kwargs)
-        context['user'] = self.request.user
-        # super users get full dashboard
-
-        if self.request.user.is_superuser:
-            context['devices'] = Gateway.objects.filter(healthy=False)
-            context['online_gw_count'] = Gateway.objects.filter(healthy=True).count()
-            context['tunnels_procssed_count'] = Tunnel.objects.count()
-            context['jobs_processed_count'] = Job.objects.count()
-            context['speedtest_results'] = SpeedTestResult.objects.count()
-            context['unhealthy_gw_count'] = Gateway.objects.filter(healthy=False).count()
-            context['failed_tunnel_count'] = Job.objects.filter(processed=False).count()
-            context['failed_job_count'] = Job.objects.filter(processed=False).count()
-            context['cloudserver_count'] = CloudServer.objects.count()
-            context['proxport_count'] = ProxyPort.objects.filter(inuse=False)
-
-        else:
-            context['devices'] = Gateway.objects.filter(user=self.request.user)
-
-        return context
-
-
-class GatewayListView(LoginRequiredMixin, ListView):
-    model = Gateway
-    context_object_name = 'devices'
-    template_name = 'connect/gateways.html'
-
-    def get_queryset(self):
-        """
-        Return a list of all the tunnels for the current user
-        """
-        user = self.request.user
-        if self.request.user.is_superuser:
-            qs = Gateway.objects.all()
-        else:
-            qs = Gateway.objects.filter(user=user)
-        return qs
-
-
-class ConsoleTunnel(LoginRequiredMixin, FormView):
-    model = Tunnel
-    context_object_name = 'proxy'
-    template_name = 'connect/create_console_button.html'
-    form_class = ConsoleForm
-    success_url = '/console/'
-
-    def get_context_data(self, **kwargs):
-        context = super(ConsoleTunnel, self).get_context_data(**kwargs)
-        return context
-
-    def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated():
-            return HttpResponseForbidden()
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-        # commit=False so that we can add some non-user exposed options
-        tunnel_instance = form.save(commit=False)
-        gateway = Gateway.objects.get(user=self.request.user)
-
-        tunnel_instance.cloudserver = gateway.cloudserver
-        proxyport = ProxyPort.objects.filter(
-                                gateway__isnull=True,
-                                cloudserver=gateway.cloudserver).first()
-        tunnel_instance.proxyport = proxyport
-        tunnel_instance.gateway = gateway
-        tunnel_instance.timeout = self.request.POST['timeout']
-        tunnel_instance.user = self.request.user
-
-        tunnel_instance.save()
-        messages.success(self.request,
-                         '{} port {} is now '
-                         'reachable at {}'.format(tunnel_instance.remotehost,
-                                                  tunnel_instance.remoteport,
-                                                  tunnel_instance.proxyport)
-                         )
-
-        return render(self.request,
-                      'connect/create_console_button.html',
-                      {'host': tunnel_instance.cloudserver,
-                       'port': tunnel_instance.proxyport})
-
-
-class TunnelListView(LoginRequiredMixin, FormMixin, ListView):
-    model = Tunnel
-    context_object_name = 'tunnels'
-    template_name = 'connect/tunnels.html'
-    form_class = TunnelForm
-    success_url = '/tunnels'
-
-    def get_queryset(self):
-        """
-        Return a list of all the tunnels for the current user
-        """
-        user = self.request.user
-        Gateway.objects.filter(user=user)
-        return Tunnel.objects.filter(user=user)
-
-    def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated():
-            return HttpResponseForbidden()
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-        # commit=False so that we can add some non-user exposed options
-        tunnel_instance = form.save(commit=False)
-        gateway = Gateway.objects.get(user=self.request.user)
-
-        tunnel_instance.cloudserver = gateway.cloudserver
-        proxyport = ProxyPort.objects.filter(
-                            gateway__isnull=True,
-                            cloudserver=gateway.cloudserver).first()
-        tunnel_instance.proxyport = proxyport
-        tunnel_instance.gateway = gateway
-        tunnel_instance.timeout = self.request.POST['timeout']
-        tunnel_instance.user = self.request.user
-        tunnel_instance.save()
-        messages.success(self.request,
-                         '{} port {} is now reachable at {}'.format(
-                             tunnel_instance.remotehost,
-                             tunnel_instance.remoteport,
-                             tunnel_instance.proxyport)
-                         )
-        return HttpResponseRedirect('/tunnels/')
-
-
 '''
-Views for API Endpoints
+Views for Connect API Endpoints
 '''
 
 

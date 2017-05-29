@@ -38,6 +38,7 @@ router.extend(connect_router)
 router.extend(discover_router)
 router.extend(inventory_router)
 router.extend(act_router)
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^docs/', swagger_view),
@@ -52,7 +53,6 @@ urlpatterns = [
     #url(r'^api/v1/', include(router.urls))
 
     # API Groups/Hierarchy e.g /act/jobs/
-    url(r'^api/v1/act/$', ConnectRoot.as_view()),
     url(r'^api/v1/act/', include(act_router.urls)),
     url(r'^api/v1/discover/', include(discover_router.urls)),
     url(r'^api/v1/connect/', include(connect_router.urls)),

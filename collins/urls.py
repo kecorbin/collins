@@ -25,8 +25,13 @@ from rest_framework import routers
 from rest_framework_swagger.views import get_swagger_view
 from api.urls import ApiRootRouter
 
-swagger_view = get_swagger_view(title='interthings.io API')
+swagger_view = get_swagger_view(title="""
 
+Welcome to the interative api documentation
+\n
+Have a look around...
+
+""")
 
 router = ApiRootRouter(trailing_slash=True)
 router.extend(connect_router)

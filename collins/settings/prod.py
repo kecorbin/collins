@@ -88,15 +88,20 @@ TEMPLATES = [
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
+    # app specific static content
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
 STATICFILES_DIRS = [
+    # site wide static content
     os.path.join(BASE_DIR, "static"),
 ]
 
+# Serve Static files at /static/
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Copy the files to /static during --collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, '/static')
 
 WSGI_APPLICATION = 'collins.wsgi.application'
 

@@ -47,9 +47,12 @@ urlpatterns = [
     url(r'^api/v1/login/', include('rest_framework.urls',
                                namespace='rest_framework')),
     # Generate model views from api root e.g /jobs/
-    url(r'^api/v1/', include(router.urls)),
+    # TODO: need to determine strategy here.
+    # without the following line, only /act /discover etc work, great for docs, maybe interop problem with older gateays
+    #url(r'^api/v1/', include(router.urls))
 
     # API Groups/Hierarchy e.g /act/jobs/
+    url(r'^api/v1/act/$', ConnectRoot.as_view()),
     url(r'^api/v1/act/', include(act_router.urls)),
     url(r'^api/v1/discover/', include(discover_router.urls)),
     url(r'^api/v1/connect/', include(connect_router.urls)),

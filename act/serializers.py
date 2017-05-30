@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from act.models import DockerJob, Result, Environment, Scheduler, Plugin
 from django_celery_beat.models import IntervalSchedule
+from rest_framework_nested.relations import NestedHyperlinkedRelatedField
+
 import logging
 import json
 logger = logging.getLogger(__name__)

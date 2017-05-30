@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework_json_api',
     'rest_framework',
     'rest_framework_swagger',
+    'oauth2_provider',
     'corsheaders',
     'discover',
     'connect',
@@ -150,6 +151,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -178,6 +180,16 @@ SWAGGER_SETTINGS = {
 
 }
 
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'connect': 'View / Create Tunnels to your systems',
+        'discover': 'View and Create Discovery jobs on your behalf',
+        'act': 'Create jobs on your behalf'
+    },
+
+    'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
+
+}
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -191,7 +203,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOGIN_URL = '/api-auth/login/'
+LOGIN_URL = '/api/v1/login/login/'
 LOGIN_REDIRECT_URL = '/api-docs'
 LOGOUT_URL = 'api-auth/logout'
 

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework_json_api',
     'rest_framework',
     'rest_framework_swagger',
+    'oauth2_provider',
     'corsheaders',
     'discover',
     'connect',

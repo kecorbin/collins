@@ -97,17 +97,35 @@ class JobResultViewSet(viewsets.GenericViewSet,
     queryset = Result.objects.all()
 
     def list(self, request, job_pk=None):
-        job = DockerJob.objects.filter(pk=int(job_pk))[0]
-        queryset = job.results.all()
-        serializer = self.get_serializer(queryset, many=True)
+        """
+        get all results for a job
+        :param request:
+        :param job_pk:
+        :return:
+        """
+        results = Result.objects.filter(job=int(job_pk))
+        serializer = self.get_serializer(results, many=True)
         return Response(serializer.data)
 
+
     def retrieve(self, request, job_pk=None):
-        print "retrieve"
-        job = DockerJob.objects.filter(pk=int(job_pk))[0]
-        queryset = job.results.all()
-        serializer = self.get_serializer(queryset, many=True)
+        """
+        get a specific result for a job
+        :param request:
+        :param job_pk:
+        :return:
+        """
+        result = Result.objects.filter(pk=int(job_pk))
+        # queryset = Result.results.all()
+        serializer = self.get_serializer(result, many=True)
         return Response(serializer.data)
+
+    def create(self):
+        """
+        create a result for a job
+        :return:
+        """
+        print("create")
 
 
 class ResultViewSet(viewsets.ModelViewSet):

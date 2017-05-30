@@ -25,6 +25,10 @@ from rest_framework import routers
 from rest_framework_swagger.views import get_swagger_view
 from api.urls import ApiRootRouter
 
+# added while troubleshooting
+from rest_framework_nested.routers import NestedSimpleRouter
+from act.views import JobResultViewSet
+
 swagger_view = get_swagger_view(title="""
 
 Welcome to the interative api documentation
@@ -33,11 +37,27 @@ Have a look around...
 
 """)
 
+# job results router seems to want to be passed directly as url,
+# ideally, but practicality beats purity
+job_results_router = NestedSimpleRouter(act_router,
+                                        r'jobs',
+                                        lookup='job')
+
+job_results_router.register(r'results',
+                            JobResultViewSet,
+                            base_name='job-results')
+
+
+
 router = ApiRootRouter(trailing_slash=True)
+
 router.extend(connect_router)
 router.extend(discover_router)
 router.extend(inventory_router)
 router.extend(act_router)
+
+
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -47,13 +67,16 @@ urlpatterns = [
     # Login Form
     url(r'^api/v1/login/', include('rest_framework.urls',
                                namespace='rest_framework')),
+    # ouath toolkit urls
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+
     # Generate model views from api root e.g /jobs/
-    # TODO: need to determine strategy here.
-    # without the following line, only /act /discover etc work, great for docs, maybe interop problem with older gateays
+    # DEPRACATED: all urls are now namespaced
     #url(r'^api/v1/', include(router.urls))
 
     # API Groups/Hierarchy e.g /act/jobs/
     url(r'^api/v1/act/', include(act_router.urls)),
+    url(r'^api/v1/act/', include(job_results_router.urls)),
     url(r'^api/v1/discover/', include(discover_router.urls)),
     url(r'^api/v1/connect/', include(connect_router.urls)),
     url(r'^api/v1/inventory/', include(inventory_router.urls))

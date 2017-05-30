@@ -4,6 +4,8 @@ django-celery-beat
 django-filter
 django-filters
 docker
+django-oauth-toolkit==0.12.0
+oauthlib==2.0.1
 drf-nested-routers
 djangorestframework-jsonapi
 django-jsonfield

@@ -176,7 +176,6 @@ class GatewayTunnelsViewSet(viewsets.GenericViewSet,
         print self.request.user.has_perm('connect.view_gateway', gateway)
         if self.request.user.has_perm('connect.view_gateway', gateway):
             tunnels = Tunnel.objects.filter(gateway=gateway)
-            print tunnels[0].proxyport
             serializer = self.get_serializer(tunnels, many=True)
             return Response(serializer.data)
         else:

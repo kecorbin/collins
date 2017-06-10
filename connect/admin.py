@@ -4,20 +4,20 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.admin import TokenAdmin
-
+from guardian.admin import GuardedModelAdmin
 
 class ProxyPortAdmin(admin.ModelAdmin):
     list_display = ('cloudserver', 'proxyport', 'is_active')
 
 
-class GatewayAdmin(admin.ModelAdmin):
+class GatewayAdmin(GuardedModelAdmin):
     list_display = ('hostname', 'wanip', 'lanip', 'mac',
                     'version', 'cloudserver', 'upgrade', 'healthy',
                     'modified')
     search_fields = ('hostname',)
 
 
-class TunnelAdmin(admin.ModelAdmin):
+class TunnelAdmin(GuardedModelAdmin):
     list_display = ('id', 'user', 'sourceip', 'remotehost',
                     'remoteport', 'proxyport', 'timeout', 'url',
                     'processed', 'created')

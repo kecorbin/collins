@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework_json_api',
     'rest_framework',
     'rest_framework_swagger',
+    'guardian',
     'oauth2_provider',
     'corsheaders',
     'discover',
@@ -132,6 +133,11 @@ else:
         }
     }
 
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

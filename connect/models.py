@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -8,6 +8,7 @@ from django.utils import timezone
 import logging
 import requests
 import json
+from guardian.shortcuts import assign_perm
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,13 @@ class CloudServer(models.Model):
 
 
 class Gateway(models.Model):
+    class Meta:
+        permissions = (
+            ('view_gateway', 'View gateway'),
+        )
+
     user = models.ForeignKey(User, null=True, blank=True)
+    users = models.ForeignKey(Group, null=True, blank=True)
     mac = models.CharField(max_length=80)
     version = models.CharField(max_length=16, default='unknown')
     lanip = models.GenericIPAddressField(null=True, blank=True)
@@ -85,10 +92,16 @@ class ProxyPort(models.Model):
 
 
 class Tunnel(models.Model):
+
+    class Meta:
+        permissions = (
+            ('view_tunnel', 'View tunnel'),
+        )
+
     objects = TunnelManager()
     archived_objects = TunnelArchiveManager()
     user = models.ForeignKey(User, null=True, blank=True)
-    gateway = models.ForeignKey(Gateway, null=True, blank=True)
+    gateway = models.ForeignKey(Gateway, related_name="gateway", null=True, blank=True)
     proxyport = models.OneToOneField(ProxyPort, null=True, blank=True)
     sourceip = models.GenericIPAddressField(default='0.0.0.0')
     remoteport = models.IntegerField()
@@ -108,9 +121,10 @@ class Tunnel(models.Model):
         else:
             # create relationship with gateway - this will have to change
             # if we support multiple gw's / user
-            self.gateway = Gateway.objects.get(hostname=self.user.username)
-            logger.info('{} : Assigning tunnel to gateway {}'.format(self.user.username,
-                                                                     self.gateway))
+            # self.gateway = Gateway.objects.get(hostname=self.user.username)
+
+            # logger.info('{} : Assigning tunnel to gateway {}'.format(self.user.username,
+            #                                                          self.gateway))
 
             # Attempt to determine regional cloudserver to use, otherwise use full pool
             if self.gateway.cloudserver is not None:
@@ -178,7 +192,13 @@ def create_user_for_gw(sender, instance=None, created=False, **kwargs):
         logger.info("{} : Created User account".format(instance.hostname))
         # Associate current user with newly created GW
         instance.user = user
+        # Create group for accessing this gateway
+        group = Group.objects.create(name=instance.hostname)
+        instance.users = group
         instance.save()
+        # Add gateway user to group
+        user.groups.add(group)
+        assign_perm('connect.view_gateway', group, instance)
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

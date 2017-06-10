@@ -28,6 +28,7 @@ from api.urls import ApiRootRouter
 # added while troubleshooting
 from rest_framework_nested.routers import NestedSimpleRouter
 from act.views import JobResultViewSet
+from connect.views import GatewayTunnelsViewSet
 
 swagger_view = get_swagger_view(title="""
 
@@ -48,6 +49,14 @@ job_results_router.register(r'results',
                             base_name='job-results')
 
 
+
+gateway_tunnels_router = NestedSimpleRouter(connect_router,
+                                            r'gateways',
+                                            lookup='gateway')
+
+gateway_tunnels_router.register(r'tunnels',
+                                GatewayTunnelsViewSet,
+                                base_name='gateway-tunnels')
 
 router = ApiRootRouter(trailing_slash=True)
 
@@ -79,5 +88,6 @@ urlpatterns = [
     url(r'^api/v1/act/', include(job_results_router.urls)),
     url(r'^api/v1/discover/', include(discover_router.urls)),
     url(r'^api/v1/connect/', include(connect_router.urls)),
+    url(r'^api/v1/connect/', include(gateway_tunnels_router.urls)),
     url(r'^api/v1/inventory/', include(inventory_router.urls))
 ]

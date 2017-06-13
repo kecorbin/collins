@@ -87,10 +87,7 @@ class GatewayViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class GatewayTunnelsViewSet(viewsets.GenericViewSet,
-                            mixins.ListModelMixin,
-                            mixins.RetrieveModelMixin,
-                            mixins.CreateModelMixin,):
+class GatewayTunnelsViewSet(viewsets.ModelViewSet):
     """
     retrieve:
         get details about a tunnel
@@ -113,25 +110,34 @@ class GatewayTunnelsViewSet(viewsets.GenericViewSet,
 
 
     serializer_class = serializers.TunnelsSerializer
-    queryset = Tunnel.objects.all()
+    # queryset = Tunnel.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('processed',)
 
-    def list(self, request, gateway_hostname=None):
-        """
-        get all tunnels for a gateway
-        :param request:
-        :param gateway_id: str id for the gateway
-        :return:
-        """
-        gateway = Gateway.objects.get(hostname=gateway_hostname)
+    def get_queryset(self, **kwargs):
+        gateway = Gateway.objects.get(hostname=self.kwargs['gateway_hostname'])
         # make sure user is authorized to use this gateway
-        print self.request.user.has_perm('connect.view_gateway', gateway)
         if self.request.user.has_perm('connect.view_gateway', gateway):
             tunnels = Tunnel.objects.filter(gateway=gateway)
-            serializer = self.get_serializer(tunnels, many=True)
-            return Response(serializer.data)
+            return tunnels
         else:
             raise Http404
+
+    # def list(self, request, gateway_hostname=None):
+    #     """
+    #     get all tunnels for a gateway
+    #     :param request:
+    #     :param gateway_id: str id for the gateway
+    #     :return:
+    #     """
+    #     gateway = Gateway.objects.get(hostname=gateway_hostname)
+    #     # make sure user is authorized to use this gateway
+    #     if self.request.user.has_perm('connect.view_gateway', gateway):
+    #         tunnels = Tunnel.objects.filter(gateway=gateway)
+    #         serializer = self.get_serializer(tunnels, many=True)
+    #         return Response(serializer.data)
+    #     else:
+    #         raise Http404
 
 
 
@@ -165,107 +171,6 @@ class GatewayTunnelsViewSet(viewsets.GenericViewSet,
             ip = self.request.data['sourceip']
 
         serializer.save(user=self.request.user, sourceip=ip)
-
-
-class TunnelListViewSet(viewsets.ModelViewSet):
-    """
-    retrieve:
-        get a tunnel
-
-    list:
-        list all tunnels
-
-    create:
-        create a tunnel
-
-    delete:
-        delete a tunnel
-
-    partial_update:
-        update fields on a tunnel
-
-    update:
-        update a tunnel
-    """
-
-    serializer_class = serializers.TunnelsSerializer
-    # permissions_classes = (permissions.IsAuthenticated,)
-    # permissions_classes = (permissions.DjangoObjectPermissions)
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('processed',)
-
-    def get_queryset(self):
-        """
-        Return a list of all the tunnels for the current user
-        """
-        return Tunnel.objects.all()
-
-        # user = self.request.user
-        # if user.is_staff:
-        #     qs = Tunnel.objects.all()
-        # else:
-        #     qs = Tunnel.objects.filter(user=user)
-        # update_last_login(None, user)
-        # return qs
-
-    def perform_create(self, serializer):
-
-        # get the source ip address of the request
-
-        # self.request.data will look something like this
-        # {u'remoteport': 22, u'remotehost': u'192.168.10.254', u'sourceip': u'173.37.200.6', u'timeout': 5}
-        if 'sourceip' not in self.request.data:
-            ip = get_client_ip(self.request)
-
-        else:
-            ip = self.request.data['sourceip']
-
-        serializer.save(user=self.request.user, sourceip=ip)
-
-
-class CreateTunnelViewSet(viewsets.ModelViewSet):
-    """
-    create:
-        create a tunnel
-
-    delete:
-        delete a tunnel
-
-    partial_update:
-        update fields on a tunnel
-
-    update:
-        update a tunnel
-    """
-    serializer_class = serializers.CreateTunnelSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def perform_create(self, serializer):
-        # dynamically populating source IP address for API calls
-        # while still allowing the client to specify,
-        # this accounts for two use cases.
-        # 1. the API call is being made on behalf of a client, ie, Greenlight
-        # 2. the API call is being made by the client itself
-
-        # get the source ip address of the request
-
-        # self.request.data will look something like this
-        # {u'remoteport': 22, u'remotehost': u'192.168.10.254', u'sourceip': u'173.37.200.6', u'timeout': 5}
-        if 'sourceip' not in self.request.data:
-            ip = get_client_ip(self.request)
-
-        else:
-            ip = self.request.data['sourceip']
-
-        serializer.save(user=self.request.user, sourceip=ip)
-
-    def get_queryset(self):
-        """
-        Return a list of all the tunnels for the current user
-        """
-        user = self.request.user
-        Tunnel.objects.filter(user=user)
-        return Tunnel.objects.filter(user=user)
 
 
 class CloudServerViewSet(viewsets.ModelViewSet):

@@ -18,7 +18,7 @@ class GatewayAdmin(GuardedModelAdmin):
 
 
 class TunnelAdmin(GuardedModelAdmin):
-    list_display = ('id', 'user', 'sourceip', 'remotehost',
+    list_display = ('id', 'user', 'gateway', 'sourceip', 'remotehost',
                     'remoteport', 'proxyport', 'timeout', 'url',
                     'processed', 'created')
     search_fields = ('id', 'user__username',)

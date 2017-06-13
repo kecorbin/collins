@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 class ScanViewSet(viewsets.GenericViewSet,
                             mixins.ListModelMixin,
                             mixins.RetrieveModelMixin,
+                            mixins.UpdateModelMixin,
                             mixins.CreateModelMixin,):
     """
     Scan

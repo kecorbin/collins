@@ -7,6 +7,7 @@ docker
 django-oauth-toolkit==0.12.0
 oauthlib==2.0.1
 drf-nested-routers
+django-rest-swagger==2.1.2
 djangorestframework-jsonapi
 django-jsonfield
 django-html-field

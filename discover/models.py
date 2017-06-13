@@ -1,12 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
+from connect.models import Gateway
 import logging
 import jsonfield
 logger = logging.getLogger(__name__)
 
 
 class Scan(models.Model):
+
+    class Meta:
+        permissions = (
+            ('scans', 'View/Perform network scans'),
+        )
+
     user = models.ForeignKey(User, null=True, blank=True)
+    gateway = models.ForeignKey(Gateway, null=True, blank=True)
     destination = models.CharField(max_length=25, null=True, blank=True)
     ports = models.CharField(max_length=25, null=True, blank=True)
     type = models.CharField(max_length=25, default='quick-vendor')
@@ -30,9 +38,15 @@ class Scan(models.Model):
                                                            self.type))
 
 class SpeedTest(models.Model):
+    class Meta:
+        permissions = (
+            ('speedtests', 'View/Perform Speedtests'),
+        )
+
     destination = models.CharField(max_length=25, null=True, blank=True)
     ports = models.CharField(max_length=25, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
+    gateway = models.ForeignKey(Gateway, null=True, blank=True)
     type = models.CharField(max_length=25, default='speedtest')
     results = models.TextField(max_length=16384, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -43,16 +57,3 @@ class SpeedTest(models.Model):
         logger.info('{} : Speedtest result for job id {}'.format(self.user,
                                                                  self.id))
 
-
-class Host(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True)
-    ip = models.GenericIPAddressField()
-    os = models.CharField(max_length=100)
-    name = models.CharField(max_length=100)
-    lastboot = models.CharField(max_length=100, blank=True, null=True)
-
-
-class Service(models.Model):
-    host = models.ForeignKey(Host, null=True, blank=True)
-    protocol = models.CharField(blank=True, null=True, max_length=10)
-    port = models.PositiveIntegerField(blank=True, null=True)

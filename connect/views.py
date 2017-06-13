@@ -86,52 +86,6 @@ class GatewayViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# DEPRACATED
-
-# class GatewayUpdateView(generics.RetrieveUpdateAPIView):
-#     """
-#     API Endpoint for Updating Gateway
-#     """
-#     serializer_class = serializers.GatewaySerializer
-#     lookup_field = 'hostname'
-#     lookup_url_kwarg = 'hostname'
-#
-#     def get_queryset(self):
-#         """
-#         Return a list of all the gateways for the current user
-#         """
-#         user = self.request.user
-#         Gateway.objects.filter(user=user)
-#         return Gateway.objects.filter(user=user)
-#
-#     def get(self, request, *args, **kwargs):
-#         return self.retrieve(request, *args, **kwargs)
-#
-#     def update(self, request, *args, **kwargs):
-#         serializer = serializers.GatewaySerializer(data=request.data,
-#                                                    partial=True)
-#
-#         if serializer.is_valid():
-#             # We use the following lines to determine what the gateway is
-#             # allowed to update on the server side
-#             obj = self.get_object()
-#             obj.version = request.data['version']
-#             obj.pubkey = request.data['pubkey']
-#             obj.lanip = request.data['lanip']
-#             obj.mac = request.data['mac']
-#             # Older gateways may not set the healthy flag
-#             if 'healthy' in request.data:
-#                 obj.healthy = request.data['healthy']
-#             else:
-#                 obj.healthy = False
-#             obj.wanip = get_client_ip(request)
-#             obj.save()
-#             serializer = serializers.GatewaySerializer(obj)
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#
-
 
 class GatewayTunnelsViewSet(viewsets.GenericViewSet,
                             mixins.ListModelMixin,
@@ -170,9 +124,7 @@ class GatewayTunnelsViewSet(viewsets.GenericViewSet,
         :return:
         """
         gateway = Gateway.objects.get(hostname=gateway_hostname)
-        print gateway
         # make sure user is authorized to use this gateway
-        print self.request.user
         print self.request.user.has_perm('connect.view_gateway', gateway)
         if self.request.user.has_perm('connect.view_gateway', gateway):
             tunnels = Tunnel.objects.filter(gateway=gateway)
@@ -183,14 +135,14 @@ class GatewayTunnelsViewSet(viewsets.GenericViewSet,
 
 
 
-    def retrieve(self, request, gateway_id=None):
+    def retrieve(self, request, gateway_hostname=None, pk=None):
         """
         get tunnel details
         :param request:
         :param gateway_id:
         :return:
         """
-        result = Tunnel.objects.filter(gateway=gateway_id)
+        result = Tunnel.objects.filter(pk=pk, gateway=gateway_hostname)
         # queryset = Result.results.all()
         serializer = self.get_serializer(result, many=True)
         return Response(serializer.data)

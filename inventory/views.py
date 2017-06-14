@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.http import Http404
 from rest_framework import viewsets
 from rest_framework import filters
 from rest_framework import permissions
 from models import System, Device
+from connect.models import Gateway
 import serializers
 
 
@@ -33,13 +35,15 @@ class SystemViewSet(viewsets.ModelViewSet):
     permissions_classes = (permissions.IsAuthenticated,)
     lookup_field = 'id'
 
-    def get_queryset(self):
-        """
-        Return a list of all the gateways for the current user
-        """
-        # user = self.request.user
-        # return System.objects.filter(user=user)
-        return System.objects.all()
+    def get_queryset(self, **kwargs):
+        gateway = Gateway.objects.get(hostname=self.kwargs['gateway_hostname'])
+        # make sure user is authorized to use this gateway
+        if self.request.user.has_perm('connect.view_gateway', gateway):
+            tunnels = System.objects.filter(gateway=gateway)
+            return tunnels
+        else:
+            raise Http404
+
 
 class DeviceViewSet(viewsets.ModelViewSet):
     """
@@ -68,10 +72,11 @@ class DeviceViewSet(viewsets.ModelViewSet):
     # def perform_create(self, serializer):
     #     # serializer.save(user=self.request.user)
 
-    def get_queryset(self):
-        """
-        Return a list of all the gateways for the current user
-        """
-        # user = self.request.user
-        # return Device.objects.filter(user=user)
-        return Device.objects.all()
+    def get_queryset(self, **kwargs):
+        gateway = Gateway.objects.get(hostname=self.kwargs['gateway_hostname'])
+        # make sure user is authorized to use this gateway
+        if self.request.user.has_perm('connect.view_gateway', gateway):
+            tunnels = Device.objects.filter(gateway=gateway)
+            return tunnels
+        else:
+            raise Http404

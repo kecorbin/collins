@@ -30,6 +30,7 @@ from rest_framework_nested.routers import NestedSimpleRouter
 from act.views import JobResultViewSet
 from connect.views import GatewayTunnelsViewSet
 from discover.views import SpeedTestViewSet, ScanViewSet
+from inventory.views import SystemViewSet, DeviceViewSet
 swagger_view = get_swagger_view(title="""
 
 Welcome to the interative api documentation
@@ -66,6 +67,15 @@ gateway_nested_router.register(r'scans',
                                 ScanViewSet,
                                 base_name='gateway-scans')
 
+gateway_nested_router.register(r'systems',
+                                 SystemViewSet,
+                                 base_name='systems-list')
+
+gateway_nested_router.register(r'devices',
+                                 DeviceViewSet,
+                                 base_name='devices-list')
+
+
 router = ApiRootRouter(trailing_slash=True)
 
 router.extend(connect_router)
@@ -97,5 +107,5 @@ urlpatterns = [
     url(r'^api/v1/discover/', include(discover_router.urls)),
     url(r'^api/v1/connect/', include(connect_router.urls)),
     url(r'^api/v1/connect/', include(gateway_nested_router.urls)),
-    url(r'^api/v1/inventory/', include(inventory_router.urls))
+    url(r'^api/v1/inventory/', include(connect_router.urls))
 ]

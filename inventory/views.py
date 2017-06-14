@@ -33,7 +33,7 @@ class SystemViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SystemSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     permissions_classes = (permissions.IsAuthenticated,)
-    lookup_field = 'system_id'
+    lookup_field = 'id'
 
     def get_queryset(self, **kwargs):
         gateway = Gateway.objects.get(hostname=self.kwargs['gateway_hostname'])
